@@ -448,6 +448,22 @@ export function useMetaFlowBuilder() {
     setCurrentScreen(newScreen.id);
   }, [screens.length, saveToHistory]);
 
+  const deleteScreen = useCallback((screenId: string) => {
+    if (screens.length <= 1) {
+      alert('Cannot delete the last screen. Create a new screen first.');
+      return;
+    }
+    
+    saveToHistory();
+    const updatedScreens = screens.filter(screen => screen.id !== screenId);
+    setScreens(updatedScreens);
+    
+    // If we're deleting the current screen, switch to the first available screen
+    if (currentScreen === screenId) {
+      setCurrentScreen(updatedScreens[0].id);
+    }
+  }, [screens, currentScreen, saveToHistory]);
+
   const generateMetaFlowJSON = useCallback((): MetaFlow => {
     const routingModel: Record<string, Array<{ condition?: string; next_screen: string }>> = {};
     
@@ -535,6 +551,7 @@ export function useMetaFlowBuilder() {
     updateComponent,
     deleteComponent,
     addScreen,
+    deleteScreen,
     undo,
     redo,
     generateMetaFlowJSON,

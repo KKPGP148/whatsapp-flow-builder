@@ -1,28 +1,24 @@
 import React, { useState } from 'react';
 import { MetaFlowScreen } from '../types/metaFlow';
-import { Phone, Battery, Wifi, Signal, ArrowLeft, MoreVertical, Video, Plus, AlertTriangle, Trash2, X, Check, ChevronRight } from 'lucide-react';
+import { Phone, Battery, Wifi, Signal, ArrowLeft, MoreVertical, Trash2, Plus, AlertTriangle } from 'lucide-react';
 
-interface MetaWhatsAppPreviewProps {
+interface WhatsAppFlowPreviewProps {
   screen: MetaFlowScreen | undefined;
   selectedComponent?: string | null;
   validationErrors?: Record<string, string[]>;
   onSelectComponent?: (id: string | null) => void;
-  onAddScreen?: (type?: 'regular' | 'success' | 'terminal') => void;
   onDeleteComponent?: (componentIndex: number) => void;
-  onDeleteScreen?: (screenId: string) => void;
-  onAddComponent?: (componentType: string) => void;
+  onAddScreen?: (type?: 'regular' | 'success' | 'terminal') => void;
 }
 
-export function MetaWhatsAppPreview({ 
+export function WhatsAppFlowPreview({ 
   screen, 
   selectedComponent, 
   validationErrors = {}, 
   onSelectComponent,
-  onAddScreen,
   onDeleteComponent,
-  onDeleteScreen,
-  onAddComponent
-}: MetaWhatsAppPreviewProps) {
+  onAddScreen
+}: WhatsAppFlowPreviewProps) {
   const [deviceType, setDeviceType] = useState<'android' | 'ios'>('android');
   const [isFormMode, setIsFormMode] = useState(false);
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -43,7 +39,7 @@ export function MetaWhatsAppPreview({
     }));
   };
 
-  const renderFlowComponent = (component: any, index: number) => {
+  const renderComponent = (component: any, index: number) => {
     const componentId = screen ? `${screen.id}_${index}` : '';
     const isSelected = selectedComponent === componentId;
     const hasErrors = validationErrors[componentId]?.length > 0;
@@ -62,7 +58,7 @@ export function MetaWhatsAppPreview({
       }
     };
 
-    const componentContent = (() => {
+    const getComponentContent = () => {
       switch (component.type) {
         case 'TextHeading':
           return (
@@ -73,65 +69,12 @@ export function MetaWhatsAppPreview({
             </div>
           );
           
-        case 'TextSubheading':
-          return (
-            <div className="text-center">
-              <h2 className="text-base font-semibold text-gray-800 leading-tight">
-                {component.text || 'Subheading Text'}
-              </h2>
-            </div>
-          );
-          
         case 'TextBody':
           return (
             <div className="text-center">
-              <p className={`text-sm text-gray-700 leading-relaxed ${
-                component['text-align'] === 'center' ? 'text-center' : 
-                component['text-align'] === 'right' ? 'text-right' : 'text-left'
-              } ${component['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}>
+              <p className="text-sm text-gray-700 leading-relaxed">
                 {component.text || 'Body text content'}
               </p>
-            </div>
-          );
-          
-        case 'TextCaption':
-          return (
-            <div className="text-center">
-              <p className="text-xs text-gray-500 leading-relaxed">
-                {component.text || 'Caption text'}
-              </p>
-            </div>
-          );
-          
-        case 'RichText':
-          return (
-            <div className="text-center">
-              <div className={`text-sm text-gray-700 leading-relaxed ${
-                component['text-align'] === 'center' ? 'text-center' : 
-                component['text-align'] === 'right' ? 'text-right' : 'text-left'
-              } ${component['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}
-                dangerouslySetInnerHTML={{
-                  __html: (component.text || 'Rich text content')
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                    .replace(/~(.*?)~/g, '<del>$1</del>')
-                }}
-              />
-            </div>
-          );
-          
-        case 'Image':
-          return (
-            <div className="flex justify-center">
-              <img
-                src={component.src || 'https://images.pexels.com/photos/147411/italy-mountains-dawn-daybreak-147411.jpeg?auto=compress&cs=tinysrgb&w=400'}
-                alt={component['alt-text'] || 'Image'}
-                className="rounded-lg max-w-full"
-                style={{ 
-                  maxHeight: '200px',
-                  objectFit: component['scale-type'] === 'contain' ? 'contain' : 'cover'
-                }}
-              />
             </div>
           );
           
@@ -150,9 +93,6 @@ export function MetaWhatsAppPreview({
                 disabled={!component.enabled}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
               />
-              {component['helper-text'] && (
-                <p className="text-xs text-gray-500">{component['helper-text']}</p>
-              )}
             </div>
           );
           
@@ -168,35 +108,9 @@ export function MetaWhatsAppPreview({
                 value={formData[component.name] || ''}
                 onChange={(e) => handleFormInputChange(component.name, e.target.value)}
                 disabled={!component.enabled}
-                maxLength={component['max-length'] || 1000}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
                 rows={3}
               />
-              {component['helper-text'] && (
-                <p className="text-xs text-gray-500">{component['helper-text']}</p>
-              )}
-            </div>
-          );
-          
-        case 'DatePicker':
-          return (
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                {component.label || 'Select Date'}
-                {component.required && <span className="text-red-500">*</span>}
-              </label>
-              <input
-                type="date"
-                value={formData[component.name] || ''}
-                onChange={(e) => handleFormInputChange(component.name, e.target.value)}
-                disabled={!component.enabled}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
-              />
-              {component['availability-selector']?.enabled && (
-                <p className="text-xs text-gray-500">
-                  Available for next {component['availability-selector']['num-days']} days
-                </p>
-              )}
             </div>
           );
           
@@ -223,69 +137,10 @@ export function MetaWhatsAppPreview({
                       disabled={!component.enabled}
                       className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                     />
-                    <div className="flex-1">
-                      <span className="text-sm text-gray-700">{option.title}</span>
-                      {option.description && (
-                        <p className="text-xs text-gray-500">{option.description}</p>
-                      )}
-                    </div>
+                    <span className="text-sm text-gray-700">{option.title}</span>
                   </label>
                 ))}
               </div>
-            </div>
-          );
-          
-        case 'RadioButtonsGroup':
-          return (
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700">
-                {component.label || 'Choose Option'}
-                {component.required && <span className="text-red-500">*</span>}
-              </label>
-              <div className="space-y-2">
-                {(component['data-source'] || []).map((option: any, optIndex: number) => (
-                  <label key={optIndex} className="flex items-center space-x-3 cursor-pointer">
-                    <input
-                      type="radio"
-                      name={component.name}
-                      value={option.id}
-                      checked={formData[component.name] === option.id}
-                      onChange={(e) => handleFormInputChange(component.name, e.target.value)}
-                      disabled={!component.enabled}
-                      className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
-                    />
-                    <div className="flex-1">
-                      <span className="text-sm text-gray-700">{option.title}</span>
-                      {option.description && (
-                        <p className="text-xs text-gray-500">{option.description}</p>
-                      )}
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
-          );
-          
-        case 'Dropdown':
-          return (
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                {component.label || 'Select Option'}
-                {component.required && <span className="text-red-500">*</span>}
-              </label>
-              <select
-                value={formData[component.name] || ''}
-                onChange={(e) => handleFormInputChange(component.name, e.target.value)}
-                disabled={!component.enabled}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
-              >
-                <option value="">Select an option</option>
-                {(component['data-source'] || []).map((option: any, optIndex: number) => (
-                  <option key={optIndex} value={option.id}>
-                    {option.title}
-                  </option>
-                ))}
-              </select>
             </div>
           );
           
@@ -300,36 +155,6 @@ export function MetaWhatsAppPreview({
             </div>
           );
           
-        case 'OptIn':
-          return (
-            <div className="space-y-2">
-              <label className="flex items-start space-x-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData[component.name] || false}
-                  onChange={(e) => handleFormInputChange(component.name, e.target.checked)}
-                  disabled={!component.enabled}
-                  className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500 mt-0.5"
-                />
-                <span className="text-sm text-gray-700">{component.label || 'Opt-in text'}</span>
-              </label>
-            </div>
-          );
-          
-        case 'EmbeddedLink':
-          return (
-            <div className="text-center">
-              <a 
-                href={component.href || '#'} 
-                className="text-sm text-green-600 hover:text-green-700 underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {component.text || 'Visit our website'}
-              </a>
-            </div>
-          );
-          
         default:
           return (
             <div className="text-center text-gray-500 text-sm">
@@ -337,7 +162,7 @@ export function MetaWhatsAppPreview({
             </div>
           );
       }
-    })();
+    };
 
     return (
       <div 
@@ -364,7 +189,7 @@ export function MetaWhatsAppPreview({
           </div>
         )}
         
-        {componentContent}
+        {getComponentContent()}
       </div>
     );
   };
@@ -377,16 +202,14 @@ export function MetaWhatsAppPreview({
             <Plus size={24} className="text-gray-400" />
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">No Screen Selected</h3>
-          <p className="text-sm text-gray-500 mb-6">Create your first screen to start building your WhatsApp Flow</p>
-          <div className="flex space-x-2 justify-center">
-            <button
-              onClick={() => onAddScreen?.('regular')}
-              className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm font-medium"
-            >
-              <Plus size={16} className="mr-2" />
-              Create Screen
-            </button>
-          </div>
+          <p className="text-sm text-gray-500 mb-6">Create your first screen to start building</p>
+          <button
+            onClick={() => onAddScreen?.('regular')}
+            className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm font-medium"
+          >
+            <Plus size={16} className="mr-2" />
+            Create Screen
+          </button>
         </div>
       </div>
     );
@@ -443,9 +266,8 @@ export function MetaWhatsAppPreview({
       </div>
 
       {/* Mobile Device Frame */}
-      <div className={`relative ${deviceType === 'ios' ? 'w-80' : 'w-80'}`}>
-        {/* Device Frame */}
-        <div className={`relative mx-auto ${deviceType === 'ios' ? 'w-80 h-[600px]' : 'w-80 h-[600px]'} bg-black rounded-3xl p-2 shadow-2xl`}>
+      <div className="relative w-80">
+        <div className="relative mx-auto w-80 h-[600px] bg-black rounded-3xl p-2 shadow-2xl">
           <div className="w-full h-full bg-white rounded-2xl overflow-hidden">
             {/* Status Bar */}
             <div className={`${deviceType === 'ios' ? 'bg-black' : 'bg-green-600'} text-white px-4 py-2 flex items-center justify-between text-xs`}>
@@ -488,7 +310,7 @@ export function MetaWhatsAppPreview({
                 <div className="space-y-4">
                   {screen.layout.children.map((child, index) => (
                     <div key={index} className="group">
-                      {renderFlowComponent(child, index)}
+                      {renderComponent(child, index)}
                     </div>
                   ))}
                 </div>
@@ -505,22 +327,10 @@ export function MetaWhatsAppPreview({
               <span>Components: {screen.layout.children.length}</span>
               <span>•</span>
               <span>ID: {screen.id}</span>
-              {screen.success && (
-                <>
-                  <span>•</span>
-                  <span className="text-green-600">Success Screen</span>
-                </>
-              )}
-              {screen.terminal && (
-                <>
-                  <span>•</span>
-                  <span className="text-red-600">Terminal Screen</span>
-                </>
-              )}
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-}
+} 
