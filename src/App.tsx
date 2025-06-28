@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MetaSidebar } from './components/MetaSidebar';
 import { MetaPropertiesPanel } from './components/MetaPropertiesPanel';
-import { WhatsAppFlowPreview } from './components/WhatsAppFlowPreview';
+import { MetaWhatsAppPreview } from './components/MetaWhatsAppPreview';
 import { MetaJSONEditor } from './components/MetaJSONEditor';
 import { useMetaFlowBuilder } from './hooks/useMetaFlowBuilder';
 import { MetaFlowComponent, MetaFlow } from './types/metaFlow';
@@ -45,6 +45,30 @@ function App() {
     setDraggedComponentType(componentType);
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (!draggedComponentType) return;
+
+    const componentDef = metaComponentLibrary.find(def => def.type === draggedComponentType);
+    if (!componentDef) return;
+
+    const newComponent: MetaFlowComponent = {
+      id: uuidv4(),
+      type: componentDef.type,
+      label: componentDef.label,
+      properties: { ...componentDef.defaultProperties },
+      position: { x: 0, y: 0 },
+      validation: componentDef.validation
+    };
+
+    addComponent(newComponent);
+    setDraggedComponentType(null);
+  };
+
   const handleComponentUpdate = (componentIndex: number, updates: any) => {
     updateComponent(componentIndex, updates);
   };
@@ -77,7 +101,7 @@ function App() {
       return;
     }
 
-    console.log('Sending flow to Meta WhatsApp Flows API:', flowJSON);
+    console.log('Sending flow to Meta API:', flowJSON);
     
     // Simulate API call to Meta
     try {
@@ -277,13 +301,15 @@ function App() {
         
         {/* Center - Enhanced WhatsApp Preview */}
         <div className="flex-1 bg-gray-50 overflow-hidden min-w-0">
-          <WhatsAppFlowPreview 
+          <MetaWhatsAppPreview 
             screen={getCurrentScreen()} 
             selectedComponent={selectedComponent}
             validationErrors={validationErrors}
             onSelectComponent={setSelectedComponent}
             onDeleteComponent={handleDeleteComponent}
             onAddScreen={addScreen}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
           />
         </div>
 
