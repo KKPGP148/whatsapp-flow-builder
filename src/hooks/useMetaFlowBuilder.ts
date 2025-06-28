@@ -20,27 +20,33 @@ export function useMetaFlowBuilder() {
         children: [
           {
             type: 'TextHeading',
-            text: 'Welcome to Our Service',
-            visible: true
+            props: {
+              text: 'Welcome to Our Service',
+              visible: true
+            }
           },
           {
             type: 'TextBody',
-            text: 'Please provide your information to get started. We will use this to personalize your experience.',
-            'text-align': 'left',
-            'font-weight': 'normal',
-            visible: true
+            props: {
+              text: 'Please provide your information to get started. We will use this to personalize your experience.',
+              'text-align': 'left',
+              'font-weight': 'normal',
+              visible: true
+            }
           },
           {
             type: 'Footer',
-            'left-caption': '',
-            'center-caption': 'Step 1 of 2',
-            'right-caption': 'Continue',
-            visible: true,
-            'on-click-action': {
-              name: 'navigate',
-              next: {
-                type: 'screen',
-                name: 'FORM_SCREEN'
+            props: {
+              'left-caption': '',
+              'center-caption': 'Step 1 of 2',
+              'right-caption': 'Continue',
+              visible: true,
+              'on-click-action': {
+                name: 'navigate',
+                next: {
+                  type: 'screen',
+                  name: 'FORM_SCREEN'
+                }
               }
             }
           }
@@ -55,87 +61,103 @@ export function useMetaFlowBuilder() {
         children: [
           {
             type: 'TextSubheading',
-            text: 'Personal Information',
-            visible: true
+            props: {
+              text: 'Personal Information',
+              visible: true
+            }
           },
           {
             type: 'TextInput',
-            label: 'Full Name',
-            placeholder: 'Enter your full name',
-            'input-type': 'text',
-            required: true,
-            enabled: true,
-            visible: true,
-            name: 'full_name'
+            props: {
+              label: 'Full Name',
+              placeholder: 'Enter your full name',
+              'input-type': 'text',
+              required: true,
+              enabled: true,
+              visible: true,
+              name: 'full_name'
+            }
           },
           {
             type: 'TextInput',
-            label: 'Email Address',
-            placeholder: 'Enter your email',
-            'input-type': 'email',
-            required: true,
-            enabled: true,
-            visible: true,
-            name: 'email'
+            props: {
+              label: 'Email Address',
+              placeholder: 'Enter your email',
+              'input-type': 'email',
+              required: true,
+              enabled: true,
+              visible: true,
+              name: 'email'
+            }
           },
           {
             type: 'RadioButtonsGroup',
-            label: 'Company Size',
-            'data-source': [
-              { id: 'startup', title: 'Startup (1-10 employees)', enabled: true },
-              { id: 'small', title: 'Small Business (11-50 employees)', enabled: true },
-              { id: 'medium', title: 'Medium Business (51-200 employees)', enabled: true },
-              { id: 'enterprise', title: 'Enterprise (200+ employees)', enabled: true }
-            ],
-            required: true,
-            enabled: true,
-            visible: true,
-            name: 'company_size'
+            props: {
+              label: 'Company Size',
+              'data-source': [
+                { id: 'startup', title: 'Startup (1-10 employees)', enabled: true },
+                { id: 'small', title: 'Small Business (11-50 employees)', enabled: true },
+                { id: 'medium', title: 'Medium Business (51-200 employees)', enabled: true },
+                { id: 'enterprise', title: 'Enterprise (200+ employees)', enabled: true }
+              ],
+              required: true,
+              enabled: true,
+              visible: true,
+              name: 'company_size'
+            }
           },
           {
             type: 'CheckboxGroup',
-            label: 'Services Interested In',
-            'data-source': [
-              { id: 'consulting', title: 'Business Consulting', description: 'Strategic planning and advice', enabled: true },
-              { id: 'development', title: 'Software Development', description: 'Custom software solutions', enabled: true },
-              { id: 'marketing', title: 'Digital Marketing', description: 'Online marketing campaigns', enabled: true }
-            ],
-            'min-selected-items': 1,
-            'max-selected-items': 3,
-            required: true,
-            enabled: true,
-            visible: true,
-            name: 'selected_services'
+            props: {
+              label: 'Services Interested In',
+              'data-source': [
+                { id: 'consulting', title: 'Business Consulting', description: 'Strategic planning and advice', enabled: true },
+                { id: 'development', title: 'Software Development', description: 'Custom software solutions', enabled: true },
+                { id: 'marketing', title: 'Digital Marketing', description: 'Online marketing campaigns', enabled: true }
+              ],
+              'min-selected-items': 1,
+              'max-selected-items': 3,
+              required: true,
+              enabled: true,
+              visible: true,
+              name: 'selected_services'
+            }
           },
           {
             type: 'TextArea',
-            label: 'Additional Comments',
-            placeholder: 'Tell us more about your needs...',
-            'max-length': 500,
-            required: false,
-            enabled: true,
-            visible: true,
-            name: 'comments'
+            props: {
+              label: 'Additional Comments',
+              placeholder: 'Tell us more about your needs...',
+              'max-length': 500,
+              required: false,
+              enabled: true,
+              visible: true,
+              name: 'comments'
+            }
           },
           {
             type: 'OptIn',
-            label: 'I agree to receive marketing communications and updates about new services',
-            name: 'marketing_consent',
-            required: false,
-            enabled: true,
-            visible: true
+            props: {
+              label: 'I agree to receive marketing communications and updates about new services',
+              name: 'marketing_consent',
+              required: false,
+              enabled: true,
+              visible: true
+            }
           },
           {
             type: 'Footer',
-            'left-caption': 'Back',
-            'center-caption': 'Step 2 of 2',
-            'right-caption': 'Submit',
-            visible: true,
-            'on-click-action': {
-              name: 'navigate',
-              next: {
-                type: 'screen',
-                name: 'SUCCESS_SCREEN'
+            props: {
+              'left-caption': 'Back',
+              'center-caption': 'Step 2 of 2',
+              'right-caption': 'Submit',
+              visible: true,
+              'on-click-action': {
+                name: 'navigate',
+                next: {
+                  type: 'screen',
+                  name: 'SUCCESS_SCREEN'
+                }
               }
             }
           }
@@ -152,21 +174,27 @@ export function useMetaFlowBuilder() {
         children: [
           {
             type: 'TextHeading',
-            text: 'Thank You!',
-            visible: true
+            props: {
+              text: 'Thank You!',
+              visible: true
+            }
           },
           {
             type: 'TextBody',
-            text: 'We have received your information and will contact you within 24 hours. Thank you for your interest in our services!',
-            'text-align': 'center',
-            'font-weight': 'normal',
-            visible: true
+            props: {
+              text: 'We have received your information and will contact you within 24 hours. Thank you for your interest in our services!',
+              'text-align': 'center',
+              'font-weight': 'normal',
+              visible: true
+            }
           },
           {
             type: 'EmbeddedLink',
-            text: 'Visit our website',
-            href: 'https://yourcompany.com',
-            visible: true
+            props: {
+              text: 'Visit our website',
+              href: 'https://yourcompany.com',
+              visible: true
+            }
           }
         ]
       }
@@ -190,10 +218,11 @@ export function useMetaFlowBuilder() {
 
   const validateComponent = useCallback((component: any, componentIndex: number, screenId: string): string[] => {
     const errors: string[] = [];
+    const props = component.props || component; // Handle both new and old format
     
     // Text validation for all text components
     if (['TextHeading', 'TextSubheading', 'TextBody', 'TextCaption', 'RichText'].includes(component.type)) {
-      if (!component.text) {
+      if (!props.text) {
         errors.push('Text content is required');
       } else {
         const maxLengths = {
@@ -204,7 +233,7 @@ export function useMetaFlowBuilder() {
           'RichText': 4096
         };
         const maxLength = maxLengths[component.type as keyof typeof maxLengths];
-        if (component.text.length > maxLength) {
+        if (props.text.length > maxLength) {
           errors.push(`Text must be under ${maxLength} characters`);
         }
       }
@@ -212,113 +241,113 @@ export function useMetaFlowBuilder() {
     
     // Image validation
     if (component.type === 'Image') {
-      if (!component.src) {
+      if (!props.src) {
         errors.push('Image source URL is required');
-      } else if (!component.src.startsWith('https://')) {
+      } else if (!props.src.startsWith('https://')) {
         errors.push('Image URL must use HTTPS');
       }
     }
     
     // Input validation
     if (['TextInput', 'TextArea', 'DatePicker'].includes(component.type)) {
-      if (!component.label) {
+      if (!props.label) {
         errors.push('Input label is required');
-      } else if (component.label.length > 20) {
+      } else if (props.label.length > 20) {
         errors.push('Label must be under 20 characters');
       }
-      if (!component.name) {
+      if (!props.name) {
         errors.push('Field name is required');
       }
     }
     
     // Selection validation
     if (['CheckboxGroup', 'RadioButtonsGroup', 'Dropdown'].includes(component.type)) {
-      if (!component.label) {
+      if (!props.label) {
         errors.push('Selection label is required');
       }
-      if (!component.name) {
+      if (!props.name) {
         errors.push('Field name is required');
       }
-      if (!component['data-source'] || component['data-source'].length === 0) {
+      if (!props['data-source'] || props['data-source'].length === 0) {
         errors.push('At least one option is required');
       }
     }
     
     // OptIn validation
     if (component.type === 'OptIn') {
-      if (!component.label) {
+      if (!props.label) {
         errors.push('Opt-in label is required');
       }
-      if (!component.name) {
+      if (!props.name) {
         errors.push('Opt-in name is required');
       }
     }
     
     // EmbeddedLink validation
     if (component.type === 'EmbeddedLink') {
-      if (!component.text) {
+      if (!props.text) {
         errors.push('Link text is required');
       }
-      if (!component.href) {
+      if (!props.href) {
         errors.push('Link URL is required');
-      } else if (!component.href.startsWith('https://')) {
+      } else if (!props.href.startsWith('https://')) {
         errors.push('Link URL must use HTTPS');
       }
     }
     
     // DataExchange validation
     if (component.type === 'DataExchange') {
-      if (!component.endpoint) {
+      if (!props.endpoint) {
         errors.push('API endpoint is required');
-      } else if (!component.endpoint.startsWith('https://')) {
+      } else if (!props.endpoint.startsWith('https://')) {
         errors.push('API endpoint must use HTTPS');
       }
-      if (!component.method) {
+      if (!props.method) {
         errors.push('HTTP method is required');
       }
     }
     
     // If condition validation
     if (component.type === 'If') {
-      if (!component.condition) {
+      if (!props.condition) {
         errors.push('Condition is required');
       }
-      if (!component['true-action']) {
+      if (!props['true-action']) {
         errors.push('True action is required');
       }
-      if (!component['false-action']) {
+      if (!props['false-action']) {
         errors.push('False action is required');
       }
     }
     
     // Switch validation
     if (component.type === 'Switch') {
-      if (!component['switch-on']) {
+      if (!props['switch-on']) {
         errors.push('Switch variable is required');
       }
-      if (!component.cases || component.cases.length === 0) {
+      if (!props.cases || props.cases.length === 0) {
         errors.push('At least one case is required');
       }
-      if (!component['default-action']) {
+      if (!props['default-action']) {
         errors.push('Default action is required');
       }
     }
     
     // FlowCompletion validation
     if (component.type === 'FlowCompletion') {
-      if (!component['completion-message']) {
+      if (!props['completion-message']) {
         errors.push('Completion message is required');
       }
-      if (!component['completion-type']) {
+      if (!props['completion-type']) {
         errors.push('Completion type is required');
       }
     }
     
     // Navigation validation
-    if (component['on-click-action']?.next?.name) {
-      const targetScreen = screens.find(s => s.id === component['on-click-action'].next.name);
+    if (props['on-click-action']?.next?.name) {
+      const targetScreen = screens.find(s => s.id === props['on-click-action'].next.name);
       if (!targetScreen) {
-        errors.push(`Target screen "${component['on-click-action'].next.name}" does not exist`);
+        errors.push(`Target screen "${props['on-click-action'].next.name}" does not exist`);
       }
     }
     
@@ -376,7 +405,7 @@ export function useMetaFlowBuilder() {
                 ...screen.layout.children,
                 {
                   type: component.type,
-                  ...component.properties // Spread properties directly at component level
+                  props: component.properties
                 }
               ]
             }
@@ -396,7 +425,7 @@ export function useMetaFlowBuilder() {
               ...screen.layout,
               children: screen.layout.children.map((child, index) =>
                 index === componentIndex 
-                  ? { ...child, ...updates.properties } // Update properties directly at component level
+                  ? { ...child, props: { ...child.props, ...updates.properties } }
                   : child
               )
             }
@@ -433,10 +462,12 @@ export function useMetaFlowBuilder() {
           // Always add Footer as it's required by Meta
           {
             type: 'Footer',
-            'left-caption': 'Back',
-            'center-caption': `Step ${screens.length + 1}`,
-            'right-caption': 'Continue',
-            visible: true
+            props: {
+              'left-caption': 'Back',
+              'center-caption': `Step ${screens.length + 1}`,
+              'right-caption': 'Continue',
+              visible: true
+            }
           }
         ]
       },
@@ -471,10 +502,10 @@ export function useMetaFlowBuilder() {
       const routes: Array<{ condition?: string; next_screen: string }> = [];
       
       screen.layout.children.forEach((child, index) => {
-        if (child['on-click-action']?.next?.name) {
+        if (child.props?.['on-click-action']?.next?.name) {
           routes.push({
             condition: `component_${index}_clicked`,
-            next_screen: child['on-click-action'].next.name
+            next_screen: child.props['on-click-action'].next.name
           });
         }
       });

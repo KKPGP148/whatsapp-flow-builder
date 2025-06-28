@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MetaFlowScreen } from '../types/metaFlow';
-import { Phone, Battery, Wifi, Signal, ArrowLeft, MoreVertical, Video, Plus, AlertTriangle, Trash2, X, Check, ChevronRight } from 'lucide-react';
+import { Phone, Battery, Wifi, Signal, MoreVertical, Plus, AlertTriangle, Trash2 } from 'lucide-react';
 
 interface MetaWhatsAppPreviewProps {
   screen: MetaFlowScreen | undefined;
@@ -63,12 +63,14 @@ export function MetaWhatsAppPreview({
     };
 
     const componentContent = (() => {
+      const props = component.props || component; // Handle both new and old format
+      
       switch (component.type) {
         case 'TextHeading':
           return (
             <div className="text-center">
               <h1 className="text-lg font-bold text-gray-900 leading-tight">
-                {component.text || 'Heading Text'}
+                {props.text || 'Heading Text'}
               </h1>
             </div>
           );
@@ -77,7 +79,7 @@ export function MetaWhatsAppPreview({
           return (
             <div className="text-center">
               <h2 className="text-base font-semibold text-gray-800 leading-tight">
-                {component.text || 'Subheading Text'}
+                {props.text || 'Subheading Text'}
               </h2>
             </div>
           );
@@ -86,10 +88,10 @@ export function MetaWhatsAppPreview({
           return (
             <div className="text-center">
               <p className={`text-sm text-gray-700 leading-relaxed ${
-                component['text-align'] === 'center' ? 'text-center' : 
-                component['text-align'] === 'right' ? 'text-right' : 'text-left'
-              } ${component['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}>
-                {component.text || 'Body text content'}
+                props['text-align'] === 'center' ? 'text-center' : 
+                props['text-align'] === 'right' ? 'text-right' : 'text-left'
+              } ${props['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}>
+                {props.text || 'Body text content'}
               </p>
             </div>
           );
@@ -98,7 +100,7 @@ export function MetaWhatsAppPreview({
           return (
             <div className="text-center">
               <p className="text-xs text-gray-500 leading-relaxed">
-                {component.text || 'Caption text'}
+                {props.text || 'Caption text'}
               </p>
             </div>
           );
@@ -107,11 +109,11 @@ export function MetaWhatsAppPreview({
           return (
             <div className="text-center">
               <div className={`text-sm text-gray-700 leading-relaxed ${
-                component['text-align'] === 'center' ? 'text-center' : 
-                component['text-align'] === 'right' ? 'text-right' : 'text-left'
-              } ${component['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}
+                props['text-align'] === 'center' ? 'text-center' : 
+                props['text-align'] === 'right' ? 'text-right' : 'text-left'
+              } ${props['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}
                 dangerouslySetInnerHTML={{
-                  __html: (component.text || 'Rich text content')
+                  __html: (props.text || 'Rich text content')
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                     .replace(/\*(.*?)\*/g, '<em>$1</em>')
                     .replace(/~(.*?)~/g, '<del>$1</del>')
@@ -124,12 +126,12 @@ export function MetaWhatsAppPreview({
           return (
             <div className="flex justify-center">
               <img
-                src={component.src || 'https://images.pexels.com/photos/147411/italy-mountains-dawn-daybreak-147411.jpeg?auto=compress&cs=tinysrgb&w=400'}
-                alt={component['alt-text'] || 'Image'}
+                src={props.src || 'https://images.pexels.com/photos/147411/italy-mountains-dawn-daybreak-147411.jpeg?auto=compress&cs=tinysrgb&w=400'}
+                alt={props['alt-text'] || 'Image'}
                 className="rounded-lg max-w-full"
                 style={{ 
                   maxHeight: '200px',
-                  objectFit: component['scale-type'] === 'contain' ? 'contain' : 'cover'
+                  objectFit: props['scale-type'] === 'contain' ? 'contain' : 'cover'
                 }}
               />
             </div>
@@ -139,19 +141,19 @@ export function MetaWhatsAppPreview({
           return (
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                {component.label || 'Input Label'}
-                {component.required && <span className="text-red-500">*</span>}
+                {props.label || 'Input Label'}
+                {props.required && <span className="text-red-500">*</span>}
               </label>
               <input
-                type={component['input-type'] || 'text'}
-                placeholder={component.placeholder || 'Enter text...'}
-                value={formData[component.name] || ''}
-                onChange={(e) => handleFormInputChange(component.name, e.target.value)}
-                disabled={!component.enabled}
+                type={props['input-type'] || 'text'}
+                placeholder={props.placeholder || 'Enter text...'}
+                value={formData[props.name] || ''}
+                onChange={(e) => handleFormInputChange(props.name, e.target.value)}
+                disabled={!props.enabled}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
               />
-              {component['helper-text'] && (
-                <p className="text-xs text-gray-500">{component['helper-text']}</p>
+              {props['helper-text'] && (
+                <p className="text-xs text-gray-500">{props['helper-text']}</p>
               )}
             </div>
           );
@@ -160,20 +162,20 @@ export function MetaWhatsAppPreview({
           return (
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                {component.label || 'TextArea Label'}
-                {component.required && <span className="text-red-500">*</span>}
+                {props.label || 'TextArea Label'}
+                {props.required && <span className="text-red-500">*</span>}
               </label>
               <textarea
-                placeholder={component.placeholder || 'Enter text...'}
-                value={formData[component.name] || ''}
-                onChange={(e) => handleFormInputChange(component.name, e.target.value)}
-                disabled={!component.enabled}
-                maxLength={component['max-length'] || 1000}
+                placeholder={props.placeholder || 'Enter text...'}
+                value={formData[props.name] || ''}
+                onChange={(e) => handleFormInputChange(props.name, e.target.value)}
+                disabled={!props.enabled}
+                maxLength={props['max-length'] || 1000}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
                 rows={3}
               />
-              {component['helper-text'] && (
-                <p className="text-xs text-gray-500">{component['helper-text']}</p>
+              {props['helper-text'] && (
+                <p className="text-xs text-gray-500">{props['helper-text']}</p>
               )}
             </div>
           );
@@ -182,19 +184,19 @@ export function MetaWhatsAppPreview({
           return (
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                {component.label || 'Select Date'}
-                {component.required && <span className="text-red-500">*</span>}
+                {props.label || 'Select Date'}
+                {props.required && <span className="text-red-500">*</span>}
               </label>
               <input
                 type="date"
-                value={formData[component.name] || ''}
-                onChange={(e) => handleFormInputChange(component.name, e.target.value)}
-                disabled={!component.enabled}
+                value={formData[props.name] || ''}
+                onChange={(e) => handleFormInputChange(props.name, e.target.value)}
+                disabled={!props.enabled}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
               />
-              {component['availability-selector']?.enabled && (
+              {props['availability-selector']?.enabled && (
                 <p className="text-xs text-gray-500">
-                  Available for next {component['availability-selector']['num-days']} days
+                  Available for next {props['availability-selector']['num-days']} days
                 </p>
               )}
             </div>
@@ -204,23 +206,23 @@ export function MetaWhatsAppPreview({
           return (
             <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
-                {component.label || 'Select Options'}
-                {component.required && <span className="text-red-500">*</span>}
+                {props.label || 'Select Options'}
+                {props.required && <span className="text-red-500">*</span>}
               </label>
               <div className="space-y-2">
-                {(component['data-source'] || []).map((option: any, optIndex: number) => (
+                {(props['data-source'] || []).map((option: any, optIndex: number) => (
                   <label key={optIndex} className="flex items-center space-x-3 cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={formData[component.name]?.includes(option.id) || false}
+                      checked={formData[props.name]?.includes(option.id) || false}
                       onChange={(e) => {
-                        const currentValues = formData[component.name] || [];
+                        const currentValues = formData[props.name] || [];
                         const newValues = e.target.checked 
                           ? [...currentValues, option.id]
                           : currentValues.filter((id: string) => id !== option.id);
-                        handleFormInputChange(component.name, newValues);
+                        handleFormInputChange(props.name, newValues);
                       }}
-                      disabled={!component.enabled}
+                      disabled={!props.enabled}
                       className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                     />
                     <div className="flex-1">
@@ -239,19 +241,19 @@ export function MetaWhatsAppPreview({
           return (
             <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
-                {component.label || 'Choose Option'}
-                {component.required && <span className="text-red-500">*</span>}
+                {props.label || 'Choose Option'}
+                {props.required && <span className="text-red-500">*</span>}
               </label>
               <div className="space-y-2">
-                {(component['data-source'] || []).map((option: any, optIndex: number) => (
+                {(props['data-source'] || []).map((option: any, optIndex: number) => (
                   <label key={optIndex} className="flex items-center space-x-3 cursor-pointer">
                     <input
                       type="radio"
-                      name={component.name}
+                      name={props.name}
                       value={option.id}
-                      checked={formData[component.name] === option.id}
-                      onChange={(e) => handleFormInputChange(component.name, e.target.value)}
-                      disabled={!component.enabled}
+                      checked={formData[props.name] === option.id}
+                      onChange={(e) => handleFormInputChange(props.name, e.target.value)}
+                      disabled={!props.enabled}
                       className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
                     />
                     <div className="flex-1">
@@ -270,17 +272,17 @@ export function MetaWhatsAppPreview({
           return (
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                {component.label || 'Select Option'}
-                {component.required && <span className="text-red-500">*</span>}
+                {props.label || 'Select Option'}
+                {props.required && <span className="text-red-500">*</span>}
               </label>
               <select
-                value={formData[component.name] || ''}
-                onChange={(e) => handleFormInputChange(component.name, e.target.value)}
-                disabled={!component.enabled}
+                value={formData[props.name] || ''}
+                onChange={(e) => handleFormInputChange(props.name, e.target.value)}
+                disabled={!props.enabled}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
               >
                 <option value="">Select an option</option>
-                {(component['data-source'] || []).map((option: any, optIndex: number) => (
+                {(props['data-source'] || []).map((option: any, optIndex: number) => (
                   <option key={optIndex} value={option.id}>
                     {option.title}
                   </option>
@@ -292,10 +294,10 @@ export function MetaWhatsAppPreview({
         case 'Footer':
           return (
             <div className="flex items-center justify-between bg-gray-50 px-4 py-3 rounded-lg">
-              <span className="text-xs text-gray-500">{component['left-caption'] || ''}</span>
-              <span className="text-xs text-gray-500">{component['center-caption'] || ''}</span>
+              <span className="text-xs text-gray-500">{props['left-caption'] || ''}</span>
+              <span className="text-xs text-gray-500">{props['center-caption'] || ''}</span>
               <button className="text-sm font-medium text-green-600 hover:text-green-700">
-                {component['right-caption'] || 'Continue'}
+                {props['right-caption'] || 'Continue'}
               </button>
             </div>
           );
@@ -306,12 +308,12 @@ export function MetaWhatsAppPreview({
               <label className="flex items-start space-x-3 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={formData[component.name] || false}
-                  onChange={(e) => handleFormInputChange(component.name, e.target.checked)}
-                  disabled={!component.enabled}
+                  checked={formData[props.name] || false}
+                  onChange={(e) => handleFormInputChange(props.name, e.target.checked)}
+                  disabled={!props.enabled}
                   className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500 mt-0.5"
                 />
-                <span className="text-sm text-gray-700">{component.label || 'Opt-in text'}</span>
+                <span className="text-sm text-gray-700">{props.label || 'Opt-in text'}</span>
               </label>
             </div>
           );
@@ -320,12 +322,12 @@ export function MetaWhatsAppPreview({
           return (
             <div className="text-center">
               <a 
-                href={component.href || '#'} 
+                href={props.href || '#'} 
                 className="text-sm text-green-600 hover:text-green-700 underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {component.text || 'Visit our website'}
+                {props.text || 'Visit our website'}
               </a>
             </div>
           );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MetaFlowScreen } from '../types/metaFlow';
-import { Phone, Battery, Wifi, Signal, ArrowLeft, MoreVertical, Trash2, Plus, AlertTriangle } from 'lucide-react';
+import { Phone, Battery, Wifi, Signal, MoreVertical, Trash2, Plus, AlertTriangle } from 'lucide-react';
 
 interface WhatsAppFlowPreviewProps {
   screen: MetaFlowScreen | undefined;
@@ -59,12 +59,14 @@ export function WhatsAppFlowPreview({
     };
 
     const getComponentContent = () => {
+      const props = component.props || component; // Handle both new and old format
+      
       switch (component.type) {
         case 'TextHeading':
           return (
             <div className="text-center">
               <h1 className="text-lg font-bold text-gray-900 leading-tight">
-                {component.text || 'Heading Text'}
+                {props.text || 'Heading Text'}
               </h1>
             </div>
           );
@@ -73,7 +75,7 @@ export function WhatsAppFlowPreview({
           return (
             <div className="text-center">
               <p className="text-sm text-gray-700 leading-relaxed">
-                {component.text || 'Body text content'}
+                {props.text || 'Body text content'}
               </p>
             </div>
           );
@@ -82,15 +84,15 @@ export function WhatsAppFlowPreview({
           return (
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                {component.label || 'Input Label'}
-                {component.required && <span className="text-red-500">*</span>}
+                {props.label || 'Input Label'}
+                {props.required && <span className="text-red-500">*</span>}
               </label>
               <input
-                type={component['input-type'] || 'text'}
-                placeholder={component.placeholder || 'Enter text...'}
-                value={formData[component.name] || ''}
-                onChange={(e) => handleFormInputChange(component.name, e.target.value)}
-                disabled={!component.enabled}
+                type={props['input-type'] || 'text'}
+                placeholder={props.placeholder || 'Enter text...'}
+                value={formData[props.name] || ''}
+                onChange={(e) => handleFormInputChange(props.name, e.target.value)}
+                disabled={!props.enabled}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
               />
             </div>
@@ -100,14 +102,14 @@ export function WhatsAppFlowPreview({
           return (
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                {component.label || 'TextArea Label'}
-                {component.required && <span className="text-red-500">*</span>}
+                {props.label || 'TextArea Label'}
+                {props.required && <span className="text-red-500">*</span>}
               </label>
               <textarea
-                placeholder={component.placeholder || 'Enter text...'}
-                value={formData[component.name] || ''}
-                onChange={(e) => handleFormInputChange(component.name, e.target.value)}
-                disabled={!component.enabled}
+                placeholder={props.placeholder || 'Enter text...'}
+                value={formData[props.name] || ''}
+                onChange={(e) => handleFormInputChange(props.name, e.target.value)}
+                disabled={!props.enabled}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
                 rows={3}
               />
@@ -118,23 +120,23 @@ export function WhatsAppFlowPreview({
           return (
             <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
-                {component.label || 'Select Options'}
-                {component.required && <span className="text-red-500">*</span>}
+                {props.label || 'Select Options'}
+                {props.required && <span className="text-red-500">*</span>}
               </label>
               <div className="space-y-2">
-                {(component['data-source'] || []).map((option: any, optIndex: number) => (
+                {(props['data-source'] || []).map((option: any, optIndex: number) => (
                   <label key={optIndex} className="flex items-center space-x-3 cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={formData[component.name]?.includes(option.id) || false}
+                      checked={formData[props.name]?.includes(option.id) || false}
                       onChange={(e) => {
-                        const currentValues = formData[component.name] || [];
+                        const currentValues = formData[props.name] || [];
                         const newValues = e.target.checked 
                           ? [...currentValues, option.id]
                           : currentValues.filter((id: string) => id !== option.id);
-                        handleFormInputChange(component.name, newValues);
+                        handleFormInputChange(props.name, newValues);
                       }}
-                      disabled={!component.enabled}
+                      disabled={!props.enabled}
                       className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                     />
                     <span className="text-sm text-gray-700">{option.title}</span>
@@ -147,10 +149,10 @@ export function WhatsAppFlowPreview({
         case 'Footer':
           return (
             <div className="flex items-center justify-between bg-gray-50 px-4 py-3 rounded-lg">
-              <span className="text-xs text-gray-500">{component['left-caption'] || ''}</span>
-              <span className="text-xs text-gray-500">{component['center-caption'] || ''}</span>
+              <span className="text-xs text-gray-500">{props['left-caption'] || ''}</span>
+              <span className="text-xs text-gray-500">{props['center-caption'] || ''}</span>
               <button className="text-sm font-medium text-green-600 hover:text-green-700">
-                {component['right-caption'] || 'Continue'}
+                {props['right-caption'] || 'Continue'}
               </button>
             </div>
           );

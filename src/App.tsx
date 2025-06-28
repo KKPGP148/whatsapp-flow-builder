@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { MetaHeader } from './components/MetaHeader';
 import { MetaSidebar } from './components/MetaSidebar';
 import { MetaPropertiesPanel } from './components/MetaPropertiesPanel';
 import { WhatsAppFlowPreview } from './components/WhatsAppFlowPreview';
@@ -44,36 +43,6 @@ function App() {
 
   const handleDragStart = (componentType: string) => {
     setDraggedComponentType(componentType);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    
-    if (draggedComponentType) {
-      const componentDef = metaComponentLibrary.find(comp => comp.type === draggedComponentType);
-      if (componentDef) {
-        const newComponent: MetaFlowComponent = {
-          id: uuidv4(),
-          type: componentDef.type,
-          label: componentDef.label,
-          properties: { ...componentDef.defaultProperties },
-          position: { x: 0, y: 0 }
-        };
-        addComponent(newComponent);
-        
-        // Select the newly added component
-        const currentScreenData = getCurrentScreen();
-        if (currentScreenData) {
-          const componentIndex = currentScreenData.layout.children.length - 1;
-          setSelectedComponent(`${currentScreen}_${componentIndex}`);
-        }
-      }
-      setDraggedComponentType(null);
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
   };
 
   const handleComponentUpdate = (componentIndex: number, updates: any) => {
