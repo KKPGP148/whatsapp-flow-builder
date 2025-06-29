@@ -69,7 +69,7 @@ export function MetaWhatsAppPreview({
         case 'TextHeading':
           return (
             <div className="text-center">
-              <h1 className="text-lg font-bold text-gray-900 leading-tight">
+              <h1 className="text-xl font-bold text-gray-900 leading-tight mb-2">
                 {props.text || 'Heading Text'}
               </h1>
             </div>
@@ -78,7 +78,7 @@ export function MetaWhatsAppPreview({
         case 'TextSubheading':
           return (
             <div className="text-center">
-              <h2 className="text-base font-semibold text-gray-800 leading-tight">
+              <h2 className="text-lg font-semibold text-gray-800 leading-tight mb-2">
                 {props.text || 'Subheading Text'}
               </h2>
             </div>
@@ -87,7 +87,7 @@ export function MetaWhatsAppPreview({
         case 'TextBody':
           return (
             <div className="text-center">
-              <p className={`text-sm text-gray-700 leading-relaxed ${
+              <p className={`text-base text-gray-700 leading-relaxed ${
                 props['text-align'] === 'center' ? 'text-center' : 
                 props['text-align'] === 'right' ? 'text-right' : 'text-left'
               } ${props['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}>
@@ -99,7 +99,7 @@ export function MetaWhatsAppPreview({
         case 'TextCaption':
           return (
             <div className="text-center">
-              <p className="text-xs text-gray-500 leading-relaxed">
+              <p className="text-sm text-gray-500 leading-relaxed">
                 {props.text || 'Caption text'}
               </p>
             </div>
@@ -108,7 +108,7 @@ export function MetaWhatsAppPreview({
         case 'RichText':
           return (
             <div className="text-center">
-              <div className={`text-sm text-gray-700 leading-relaxed ${
+              <div className={`text-base text-gray-700 leading-relaxed ${
                 props['text-align'] === 'center' ? 'text-center' : 
                 props['text-align'] === 'right' ? 'text-right' : 'text-left'
               } ${props['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}
@@ -128,7 +128,7 @@ export function MetaWhatsAppPreview({
               <img
                 src={props.src || 'https://images.pexels.com/photos/147411/italy-mountains-dawn-daybreak-147411.jpeg?auto=compress&cs=tinysrgb&w=400'}
                 alt={props['alt-text'] || 'Image'}
-                className="rounded-lg max-w-full"
+                className="rounded-lg max-w-full shadow-sm"
                 style={{ 
                   maxHeight: '200px',
                   objectFit: props['scale-type'] === 'contain' ? 'contain' : 'cover'
@@ -139,10 +139,10 @@ export function MetaWhatsAppPreview({
           
         case 'TextInput':
           return (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Input Label'}
-                {props.required && <span className="text-red-500">*</span>}
+                {props.required && <span className="text-red-500 ml-1">*</span>}
               </label>
               <input
                 type={props['input-type'] || 'text'}
@@ -150,20 +150,20 @@ export function MetaWhatsAppPreview({
                 value={formData[props.name] || ''}
                 onChange={(e) => handleFormInputChange(props.name, e.target.value)}
                 disabled={!props.enabled}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-base transition-colors"
               />
               {props['helper-text'] && (
-                <p className="text-xs text-gray-500">{props['helper-text']}</p>
+                <p className="text-sm text-gray-500">{props['helper-text']}</p>
               )}
             </div>
           );
           
         case 'TextArea':
           return (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'TextArea Label'}
-                {props.required && <span className="text-red-500">*</span>}
+                {props.required && <span className="text-red-500 ml-1">*</span>}
               </label>
               <textarea
                 placeholder={props.placeholder || 'Enter text...'}
@@ -171,31 +171,31 @@ export function MetaWhatsAppPreview({
                 onChange={(e) => handleFormInputChange(props.name, e.target.value)}
                 disabled={!props.enabled}
                 maxLength={props['max-length'] || 1000}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-base transition-colors"
                 rows={3}
               />
               {props['helper-text'] && (
-                <p className="text-xs text-gray-500">{props['helper-text']}</p>
+                <p className="text-sm text-gray-500">{props['helper-text']}</p>
               )}
             </div>
           );
           
         case 'DatePicker':
           return (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Select Date'}
-                {props.required && <span className="text-red-500">*</span>}
+                {props.required && <span className="text-red-500 ml-1">*</span>}
               </label>
               <input
                 type="date"
                 value={formData[props.name] || ''}
                 onChange={(e) => handleFormInputChange(props.name, e.target.value)}
                 disabled={!props.enabled}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-base transition-colors"
               />
               {props['availability-selector']?.enabled && (
-                <p className="text-xs text-gray-500">
+                <p className="text-sm text-gray-500">
                   Available for next {props['availability-selector']['num-days']} days
                 </p>
               )}
@@ -204,14 +204,14 @@ export function MetaWhatsAppPreview({
           
         case 'CheckboxGroup':
           return (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Select Options'}
-                {props.required && <span className="text-red-500">*</span>}
+                {props.required && <span className="text-red-500 ml-1">*</span>}
               </label>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {(props['data-source'] || []).map((option: any, optIndex: number) => (
-                  <label key={optIndex} className="flex items-center space-x-3 cursor-pointer">
+                  <label key={optIndex} className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <input
                       type="checkbox"
                       checked={formData[props.name]?.includes(option.id) || false}
@@ -223,12 +223,12 @@ export function MetaWhatsAppPreview({
                         handleFormInputChange(props.name, newValues);
                       }}
                       disabled={!props.enabled}
-                      className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                      className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500 mt-0.5"
                     />
                     <div className="flex-1">
-                      <span className="text-sm text-gray-700">{option.title}</span>
+                      <span className="text-base text-gray-700 font-medium">{option.title}</span>
                       {option.description && (
-                        <p className="text-xs text-gray-500">{option.description}</p>
+                        <p className="text-sm text-gray-500 mt-1">{option.description}</p>
                       )}
                     </div>
                   </label>
@@ -239,14 +239,14 @@ export function MetaWhatsAppPreview({
           
         case 'RadioButtonsGroup':
           return (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Choose Option'}
-                {props.required && <span className="text-red-500">*</span>}
+                {props.required && <span className="text-red-500 ml-1">*</span>}
               </label>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {(props['data-source'] || []).map((option: any, optIndex: number) => (
-                  <label key={optIndex} className="flex items-center space-x-3 cursor-pointer">
+                  <label key={optIndex} className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <input
                       type="radio"
                       name={props.name}
@@ -254,12 +254,12 @@ export function MetaWhatsAppPreview({
                       checked={formData[props.name] === option.id}
                       onChange={(e) => handleFormInputChange(props.name, e.target.value)}
                       disabled={!props.enabled}
-                      className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
+                      className="w-5 h-5 text-green-600 border-gray-300 focus:ring-green-500 mt-0.5"
                     />
                     <div className="flex-1">
-                      <span className="text-sm text-gray-700">{option.title}</span>
+                      <span className="text-base text-gray-700 font-medium">{option.title}</span>
                       {option.description && (
-                        <p className="text-xs text-gray-500">{option.description}</p>
+                        <p className="text-sm text-gray-500 mt-1">{option.description}</p>
                       )}
                     </div>
                   </label>
@@ -270,16 +270,16 @@ export function MetaWhatsAppPreview({
           
         case 'Dropdown':
           return (
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Select Option'}
-                {props.required && <span className="text-red-500">*</span>}
+                {props.required && <span className="text-red-500 ml-1">*</span>}
               </label>
               <select
                 value={formData[props.name] || ''}
                 onChange={(e) => handleFormInputChange(props.name, e.target.value)}
                 disabled={!props.enabled}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-base transition-colors"
               >
                 <option value="">Select an option</option>
                 {(props['data-source'] || []).map((option: any, optIndex: number) => (
@@ -293,10 +293,10 @@ export function MetaWhatsAppPreview({
           
         case 'Footer':
           return (
-            <div className="flex items-center justify-between bg-gray-50 px-4 py-3 rounded-lg">
-              <span className="text-xs text-gray-500">{props['left-caption'] || ''}</span>
-              <span className="text-xs text-gray-500">{props['center-caption'] || ''}</span>
-              <button className="text-sm font-medium text-green-600 hover:text-green-700">
+            <div className="flex items-center justify-between bg-gray-50 px-4 py-4 rounded-lg border-t border-gray-200">
+              <span className="text-sm text-gray-500">{props['left-caption'] || ''}</span>
+              <span className="text-sm text-gray-500">{props['center-caption'] || ''}</span>
+              <button className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors">
                 {props['right-caption'] || 'Continue'}
               </button>
             </div>
@@ -304,16 +304,16 @@ export function MetaWhatsAppPreview({
           
         case 'OptIn':
           return (
-            <div className="space-y-2">
-              <label className="flex items-start space-x-3 cursor-pointer">
+            <div className="space-y-3">
+              <label className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors">
                 <input
                   type="checkbox"
                   checked={formData[props.name] || false}
                   onChange={(e) => handleFormInputChange(props.name, e.target.checked)}
                   disabled={!props.enabled}
-                  className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500 mt-0.5"
+                  className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500 mt-0.5"
                 />
-                <span className="text-sm text-gray-700">{props.label || 'Opt-in text'}</span>
+                <span className="text-base text-gray-700">{props.label || 'Opt-in text'}</span>
               </label>
             </div>
           );
@@ -323,7 +323,7 @@ export function MetaWhatsAppPreview({
             <div className="text-center">
               <a 
                 href={props.href || '#'} 
-                className="text-sm text-green-600 hover:text-green-700 underline"
+                className="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -334,7 +334,7 @@ export function MetaWhatsAppPreview({
           
         default:
           return (
-            <div className="text-center text-gray-500 text-sm">
+            <div className="text-center text-gray-500 text-base">
               {component.type} component
             </div>
           );
@@ -343,17 +343,17 @@ export function MetaWhatsAppPreview({
 
     return (
       <div 
-        className={`relative p-4 border rounded-lg transition-all cursor-pointer ${
+        className={`relative bg-white rounded-lg shadow-sm border border-gray-200 transition-all cursor-pointer ${
           isSelected 
-            ? 'border-blue-500 bg-blue-50 shadow-md' 
-            : 'border-gray-200 bg-white hover:border-gray-300'
+            ? 'ring-2 ring-blue-500 shadow-md' 
+            : 'hover:shadow-md hover:border-gray-300'
         } ${hasErrors ? 'border-red-300 bg-red-50' : ''}`}
         onClick={handleClick}
       >
         {/* Delete button */}
         <button
           onClick={handleDelete}
-          className="absolute top-2 right-2 p-1 text-red-500 hover:text-red-700 hover:bg-red-100 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-2 right-2 p-1 text-red-500 hover:text-red-700 hover:bg-red-100 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10"
           title="Delete component"
         >
           <Trash2 size={14} />
@@ -361,12 +361,14 @@ export function MetaWhatsAppPreview({
         
         {/* Error indicator */}
         {hasErrors && (
-          <div className="absolute top-2 left-2 p-1 text-red-500">
+          <div className="absolute top-2 left-2 p-1 text-red-500 z-10">
             <AlertTriangle size={14} />
           </div>
         )}
         
-        {componentContent}
+        <div className="p-4">
+          {componentContent}
+        </div>
       </div>
     );
   };
@@ -445,9 +447,9 @@ export function MetaWhatsAppPreview({
       </div>
 
       {/* Mobile Device Frame */}
-      <div className={`relative ${deviceType === 'ios' ? 'w-80' : 'w-80'}`}>
+      <div className="relative">
         {/* Device Frame */}
-        <div className={`relative mx-auto ${deviceType === 'ios' ? 'w-80 h-[600px]' : 'w-80 h-[600px]'} bg-black rounded-3xl p-2 shadow-2xl`}>
+        <div className={`relative mx-auto ${deviceType === 'ios' ? 'w-80 h-[700px]' : 'w-80 h-[700px]'} bg-black rounded-3xl p-2 shadow-2xl`}>
           <div className="w-full h-full bg-white rounded-2xl overflow-hidden">
             {/* Status Bar */}
             <div className={`${deviceType === 'ios' ? 'bg-black' : 'bg-green-600'} text-white px-4 py-2 flex items-center justify-between text-xs`}>
