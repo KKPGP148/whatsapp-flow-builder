@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MetaFlowScreen } from '../types/metaFlow';
-import { Phone, Battery, Wifi, Signal, MoreVertical, Plus, AlertTriangle, Trash2, MessageCircle, ArrowLeft, Video, PhoneCall } from 'lucide-react';
+import { Phone, Battery, Wifi, Signal, MoreVertical, Plus, AlertTriangle, Trash2, MessageCircle, ArrowLeft, Video, PhoneCall, Camera, Mic, Paperclip, Send, Smile } from 'lucide-react';
 
 interface MetaWhatsAppPreviewProps {
   screen: MetaFlowScreen | undefined;
@@ -51,16 +51,20 @@ export function MetaWhatsAppPreview({
     }));
   };
 
-  const renderBusinessMessage = (content: React.ReactNode, isFooter: boolean = false) => {
+  // WhatsApp message bubble component
+  const WhatsAppBubble = ({ children, isFooter = false }: { children: React.ReactNode; isFooter?: boolean }) => {
     if (isFooter) {
-      return content;
+      return <div className="mt-2">{children}</div>;
     }
     
     return (
-      <div className="flex justify-start mb-3">
-        <div className="bg-white rounded-lg px-3 py-2 max-w-[85%] shadow-sm border border-gray-200">
-          <div className="text-gray-800">
-            {content}
+      <div className="flex justify-start mb-2">
+        <div className="relative max-w-[85%] bg-white rounded-lg shadow-sm">
+          {/* Message bubble tail */}
+          <div className="absolute -left-2 top-3 w-0 h-0 border-t-[8px] border-t-transparent border-r-[12px] border-r-white border-b-[8px] border-b-transparent"></div>
+          
+          <div className="px-3 py-2">
+            {children}
           </div>
         </div>
       </div>
@@ -92,7 +96,7 @@ export function MetaWhatsAppPreview({
       switch (component.type) {
         case 'TextHeading':
           return (
-            <h1 className={`text-lg font-bold text-gray-900 leading-tight mb-2 ${
+            <h1 className={`text-lg font-bold text-gray-900 leading-tight mb-1 ${
               props['text-align'] === 'center' ? 'text-center' : 
               props['text-align'] === 'right' ? 'text-right' : 'text-left'
             }`}>
@@ -102,7 +106,7 @@ export function MetaWhatsAppPreview({
           
         case 'TextSubheading':
           return (
-            <h2 className={`text-base font-semibold text-gray-800 leading-tight mb-2 ${
+            <h2 className={`text-base font-semibold text-gray-800 leading-tight mb-1 ${
               props['text-align'] === 'center' ? 'text-center' : 
               props['text-align'] === 'right' ? 'text-right' : 'text-left'
             }`}>
@@ -112,7 +116,7 @@ export function MetaWhatsAppPreview({
           
         case 'TextBody':
           return (
-            <p className={`text-sm text-gray-700 leading-relaxed mb-2 ${
+            <p className={`text-sm text-gray-700 leading-relaxed mb-1 ${
               props['text-align'] === 'center' ? 'text-center' : 
               props['text-align'] === 'right' ? 'text-right' : 'text-left'
             } ${props['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}>
@@ -132,7 +136,7 @@ export function MetaWhatsAppPreview({
           
         case 'RichText':
           return (
-            <div className={`text-sm text-gray-700 leading-relaxed mb-2 ${
+            <div className={`text-sm text-gray-700 leading-relaxed mb-1 ${
               props['text-align'] === 'center' ? 'text-center' : 
               props['text-align'] === 'right' ? 'text-right' : 'text-left'
             } ${props['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}
@@ -164,7 +168,7 @@ export function MetaWhatsAppPreview({
           
         case 'TextInput':
           return (
-            <div className="space-y-2 mb-3">
+            <div className="space-y-2 mb-2">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Input Label'}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
@@ -185,7 +189,7 @@ export function MetaWhatsAppPreview({
           
         case 'TextArea':
           return (
-            <div className="space-y-2 mb-3">
+            <div className="space-y-2 mb-2">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'TextArea Label'}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
@@ -207,7 +211,7 @@ export function MetaWhatsAppPreview({
           
         case 'DatePicker':
           return (
-            <div className="space-y-2 mb-3">
+            <div className="space-y-2 mb-2">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Select Date'}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
@@ -229,7 +233,7 @@ export function MetaWhatsAppPreview({
           
         case 'CheckboxGroup':
           return (
-            <div className="space-y-3 mb-3">
+            <div className="space-y-2 mb-2">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Select Options'}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
@@ -269,7 +273,7 @@ export function MetaWhatsAppPreview({
           
         case 'RadioButtonsGroup':
           return (
-            <div className="space-y-3 mb-3">
+            <div className="space-y-2 mb-2">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Choose Option'}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
@@ -300,7 +304,7 @@ export function MetaWhatsAppPreview({
           
         case 'Dropdown':
           return (
-            <div className="space-y-2 mb-3">
+            <div className="space-y-2 mb-2">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Select Option'}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
@@ -323,8 +327,8 @@ export function MetaWhatsAppPreview({
 
         case 'ChipSelector':
           return (
-            <div className="space-y-2 mb-3">
-              <label className="block text-sm font-medium text-gray-700">
+            <div className="space-y-2 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 {props.label || 'Select Tags'}
               </label>
               <div className="flex flex-wrap gap-2">
@@ -351,7 +355,7 @@ export function MetaWhatsAppPreview({
 
         case 'NavigationList':
           return (
-            <div className="space-y-2 mb-3">
+            <div className="space-y-2 mb-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {props.label || 'Choose Option'}
               </label>
@@ -385,15 +389,12 @@ export function MetaWhatsAppPreview({
 
         case 'PhotoPicker':
           return (
-            <div className="space-y-2 mb-3">
+            <div className="space-y-2 mb-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {props.label || 'Upload Photos'}
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center bg-gray-50">
-                <svg className="w-8 h-8 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
+                <Camera size={24} className="mx-auto text-gray-400 mb-2" />
                 <p className="text-sm text-gray-600">
                   {props['photo-source'] === 'camera' ? 'Take Photo' :
                    props['photo-source'] === 'gallery' ? 'Choose from Gallery' :
@@ -410,14 +411,12 @@ export function MetaWhatsAppPreview({
 
         case 'DocumentPicker':
           return (
-            <div className="space-y-2 mb-3">
+            <div className="space-y-2 mb-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {props.label || 'Upload Document'}
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center bg-gray-50">
-                <svg className="w-8 h-8 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
+                <Paperclip size={24} className="mx-auto text-gray-400 mb-2" />
                 <p className="text-sm text-gray-600">Choose Document</p>
                 {props['allowed-types'] && (
                   <p className="text-xs text-gray-500 mt-1">
@@ -435,7 +434,7 @@ export function MetaWhatsAppPreview({
           
         case 'OptIn':
           return (
-            <div className="space-y-2 mb-3">
+            <div className="space-y-2 mb-2">
               <label className="flex items-start space-x-3 cursor-pointer">
                 <input
                   type="checkbox"
@@ -468,7 +467,7 @@ export function MetaWhatsAppPreview({
 
         case 'If':
           return (
-            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg mb-3">
+            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg mb-2">
               <p className="text-sm font-medium text-yellow-800 mb-1">Conditional Logic</p>
               <p className="text-xs text-yellow-700">
                 If {props.condition?.variable} {props.condition?.operator} "{props.condition?.value}"
@@ -482,7 +481,7 @@ export function MetaWhatsAppPreview({
 
         case 'Switch':
           return (
-            <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg mb-3">
+            <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg mb-2">
               <p className="text-sm font-medium text-purple-800 mb-1">Multi-Case Logic</p>
               <p className="text-xs text-purple-700 mb-2">
                 Switch on: {props['switch-on']}
@@ -501,7 +500,7 @@ export function MetaWhatsAppPreview({
 
         case 'DataExchange':
           return (
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg mb-3">
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg mb-2">
               <p className="text-sm font-medium text-blue-800 mb-1">API Call</p>
               <p className="text-xs text-blue-700 mb-1">
                 {props.method} {props.endpoint?.split('/').pop()}
@@ -516,7 +515,7 @@ export function MetaWhatsAppPreview({
 
         case 'FlowCompletion':
           return (
-            <div className="p-3 bg-green-50 border border-green-200 rounded-lg mb-3">
+            <div className="p-3 bg-green-50 border border-green-200 rounded-lg mb-2">
               <p className="text-sm font-medium text-green-800 mb-1">
                 {props['completion-type'] === 'success' ? 'Success' : 'Error'} Completion
               </p>
@@ -567,7 +566,32 @@ export function MetaWhatsAppPreview({
           </div>
         )}
         
-        {renderBusinessMessage(getComponentContent(), isFooter)}
+        {isFooter ? (
+          // Footer renders outside of bubble
+          <div className="mt-3 p-3 bg-gray-50 border-t border-gray-200 rounded-b-lg">
+            <div className="flex items-center justify-between">
+              {props['left-caption'] && (
+                <button className="text-sm text-green-600 hover:text-green-700 font-medium">
+                  {props['left-caption']}
+                </button>
+              )}
+              
+              {props['center-caption'] && (
+                <span className="text-xs text-gray-500 font-medium">
+                  {props['center-caption']}
+                </span>
+              )}
+              
+              {props['right-caption'] && (
+                <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-full text-sm font-medium">
+                  {props['right-caption']}
+                </button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <WhatsAppBubble>{getComponentContent()}</WhatsAppBubble>
+        )}
       </div>
     );
   };
@@ -652,10 +676,10 @@ export function MetaWhatsAppPreview({
       {/* Mobile Device Frame */}
       <div className="relative w-80">
         {/* Device Frame with platform-specific styling */}
-        <div className={`relative mx-auto w-80 h-[600px] ${
+        <div className={`relative mx-auto w-80 h-[640px] ${
           deviceType === 'ios' 
             ? 'bg-black rounded-[2.5rem] p-1' 
-            : 'bg-black rounded-3xl p-2'
+            : 'bg-gray-900 rounded-3xl p-2'
         } shadow-2xl`}>
           <div className={`w-full h-full bg-white ${
             deviceType === 'ios' 
@@ -667,12 +691,13 @@ export function MetaWhatsAppPreview({
             <div className={`${
               deviceType === 'ios' 
                 ? 'bg-white text-black px-6 py-3' 
-                : 'bg-green-600 text-white px-4 py-2'
+                : 'bg-gray-900 text-white px-4 py-2'
             } flex items-center justify-between text-xs flex-shrink-0`}>
               <div className="flex items-center space-x-1">
                 {deviceType === 'ios' ? (
                   <>
                     <div className="flex space-x-1">
+                      <div className="w-1 h-1 bg-black rounded-full"></div>
                       <div className="w-1 h-1 bg-black rounded-full"></div>
                       <div className="w-1 h-1 bg-black rounded-full"></div>
                       <div className="w-1 h-1 bg-black rounded-full"></div>
@@ -715,14 +740,16 @@ export function MetaWhatsAppPreview({
               </div>
             </div>
 
-            {/* Chat Background */}
+            {/* Chat Background with WhatsApp pattern */}
             <div 
               className="flex-1 overflow-y-auto min-h-0"
               style={{
-                backgroundImage: deviceType === 'ios' 
-                  ? 'linear-gradient(to bottom, #e5ddd5, #e5ddd5)'
-                  : 'linear-gradient(to bottom, #e5ddd5, #e5ddd5)',
-                backgroundSize: '100% 100%'
+                backgroundImage: `
+                  radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                  radial-gradient(circle at 40% 80%, rgba(120, 119, 198, 0.03) 0%, transparent 50%)
+                `,
+                backgroundColor: '#e5ddd5'
               }}
               onDrop={onDrop}
               onDragOver={onDragOver}
@@ -781,6 +808,25 @@ export function MetaWhatsAppPreview({
                 </div>
               </div>
             )}
+
+            {/* WhatsApp Input Bar */}
+            <div className="bg-white border-t border-gray-200 p-2 flex items-center space-x-2 flex-shrink-0">
+              <button className="p-2 text-gray-500 hover:text-gray-700">
+                <Smile size={20} />
+              </button>
+              <div className="flex-1 bg-gray-100 rounded-full px-4 py-2 flex items-center space-x-2">
+                <span className="text-sm text-gray-500">Type a message</span>
+                <button className="text-gray-500 hover:text-gray-700">
+                  <Paperclip size={16} />
+                </button>
+                <button className="text-gray-500 hover:text-gray-700">
+                  <Camera size={16} />
+                </button>
+              </div>
+              <button className="p-2 text-green-600 hover:text-green-700">
+                <Mic size={20} />
+              </button>
+            </div>
           </div>
         </div>
 
