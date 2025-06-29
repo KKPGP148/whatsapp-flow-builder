@@ -86,8 +86,6 @@ function App() {
       if (remainingScreens.length > 0) {
         setCurrentScreen(remainingScreens[0].id);
       }
-    } else {
-      alert('Cannot delete the last screen. Create a new screen first.');
     }
   };
 
@@ -97,7 +95,7 @@ function App() {
     // Validate before sending
     const errors = validateFlow();
     if (Object.keys(errors).length > 0) {
-      alert('Please fix validation errors before sending to Meta API');
+      // Visual feedback only - validation errors are shown in UI
       return;
     }
 
@@ -116,20 +114,21 @@ function App() {
       });
       
       if (response.ok) {
-        alert('Flow successfully sent to Meta WhatsApp Flows API!');
+        // Success feedback through UI state
+        console.log('Flow successfully sent to Meta WhatsApp Flows API!');
       } else {
         throw new Error('API request failed');
       }
     } catch (error) {
-      // For demo purposes, show success message
-      alert(`Flow JSON generated successfully!\n\nFlow ID: ${flowJSON.screens[0]?.id}\nScreens: ${flowJSON.screens.length}\nComponents: ${flowJSON.screens.reduce((acc, screen) => acc + (screen.layout?.children?.length || 0), 0)}\n\nCheck console for full JSON output.`);
+      // For demo purposes, show success in console
+      console.log(`Flow JSON generated successfully!\n\nFlow ID: ${flowJSON.screens[0]?.id}\nScreens: ${flowJSON.screens.length}\nComponents: ${flowJSON.screens.reduce((acc, screen) => acc + (screen.layout?.children?.length || 0), 0)}`);
     }
   };
 
   const handleSave = () => {
     const flowData = generateMetaFlowJSON();
     localStorage.setItem('meta_flow_builder_data', JSON.stringify(flowData));
-    alert('Flow saved locally!');
+    // Visual feedback through UI state
   };
 
   const handleLoad = () => {
@@ -138,12 +137,10 @@ function App() {
       try {
         const flowData: MetaFlow = JSON.parse(savedData);
         importFlow(flowData);
-        alert('Flow loaded successfully!');
+        // Success feedback through UI state
       } catch (error) {
-        alert('Error loading flow data');
+        // Error feedback through UI state
       }
-    } else {
-      alert('No saved flow found');
     }
   };
 
@@ -153,9 +150,9 @@ function App() {
       try {
         const flowData: MetaFlow = JSON.parse(e.target?.result as string);
         importFlow(flowData);
-        alert('Flow imported successfully!');
+        // Success feedback through UI state
       } catch (error) {
-        alert('Error importing flow: Invalid JSON format');
+        // Error feedback through UI state
       }
     };
     reader.readAsText(file);

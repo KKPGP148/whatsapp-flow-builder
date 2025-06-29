@@ -18,6 +18,7 @@ export function MetaJSONEditor({ flowJSON, hasValidationErrors, onRunFlow, onUpd
   const [selectedCategory, setSelectedCategory] = useState<FlowCategory>('OTHER');
   const [editorValue, setEditorValue] = useState('');
   const [showSettings, setShowSettings] = useState(false);
+  const [jsonUpdateStatus, setJsonUpdateStatus] = useState<'success' | 'error' | null>(null);
 
   const jsonString = JSON.stringify(flowJSON, null, 2);
 
@@ -54,7 +55,9 @@ export function MetaJSONEditor({ flowJSON, hasValidationErrors, onRunFlow, onUpd
       setEditorValue(formatted);
     } catch (error) {
       console.error('Invalid JSON:', error);
-      alert('Invalid JSON format. Please check your syntax.');
+      // Visual feedback only
+      setJsonUpdateStatus('error');
+      setTimeout(() => setJsonUpdateStatus(null), 3000);
     }
   };
 
@@ -68,9 +71,11 @@ export function MetaJSONEditor({ flowJSON, hasValidationErrors, onRunFlow, onUpd
     try {
       JSON.parse(editorValue); // Validate JSON
       onUpdateJSON(editorValue);
-      alert('JSON changes applied successfully!');
+      setJsonUpdateStatus('success');
+      setTimeout(() => setJsonUpdateStatus(null), 3000);
     } catch (error) {
-      alert('Invalid JSON format. Please check your syntax.');
+      setJsonUpdateStatus('error');
+      setTimeout(() => setJsonUpdateStatus(null), 3000);
     }
   };
 
@@ -80,13 +85,12 @@ export function MetaJSONEditor({ flowJSON, hasValidationErrors, onRunFlow, onUpd
       setEditorValue(text);
     } catch (err) {
       console.error('Failed to paste from clipboard:', err);
-      alert('Failed to paste from clipboard. Please paste manually in the editor.');
     }
   };
 
   const handleDeployToMeta = async () => {
     if (hasValidationErrors) {
-      alert('Please fix validation errors before deploying to Meta API');
+      // Visual feedback only - errors are shown in validation status
       return;
     }
 
@@ -113,8 +117,6 @@ export function MetaJSONEditor({ flowJSON, hasValidationErrors, onRunFlow, onUpd
         message: `Flow successfully deployed! Flow ID: ${result.id}`
       });
 
-      alert(`🎉 Flow deployed successfully!\n\nFlow ID: ${result.id}\nStatus: ${result.status}\n\nYour WhatsApp Flow is now live and ready to use!`);
-
     } catch (error: any) {
       console.error('Deployment failed:', error);
       
@@ -123,8 +125,6 @@ export function MetaJSONEditor({ flowJSON, hasValidationErrors, onRunFlow, onUpd
         error: error.message,
         message: 'Failed to deploy flow to Meta API'
       });
-
-      alert(`❌ Deployment failed!\n\nError: ${error.message}\n\nCheck the detailed error information below.`);
     } finally {
       setIsDeploying(false);
     }
@@ -268,10 +268,19 @@ export function MetaJSONEditor({ flowJSON, hasValidationErrors, onRunFlow, onUpd
         <div className="flex space-x-1">
           <button
             onClick={applyJSONChanges}
-            className="flex-1 flex items-center justify-center space-x-1 px-2 py-1 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors"
+            className={`flex-1 flex items-center justify-center space-x-1 px-2 py-1 text-xs rounded transition-colors ${
+              jsonUpdateStatus === 'success' 
+                ? 'bg-green-600 text-white' 
+                : jsonUpdateStatus === 'error'
+                ? 'bg-red-600 text-white'
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
+            }`}
           >
             <FileText size={12} />
-            <span>Apply</span>
+            <span>
+              {jsonUpdateStatus === 'success' ? 'Applied!' : 
+               jsonUpdateStatus === 'error' ? 'Error' : 'Apply'}
+            </span>
           </button>
           <button
             onClick={handleDeployToMeta}
