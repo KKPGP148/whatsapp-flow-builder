@@ -6,7 +6,7 @@ import { MetaJSONEditor } from './components/MetaJSONEditor';
 import { useMetaFlowBuilder } from './hooks/useMetaFlowBuilder';
 import { MetaFlowComponent, MetaFlow } from './types/metaFlow';
 import { metaComponentLibrary } from './data/metaComponentLibrary';
-import { Code, Settings, Trash2, Plus, AlertTriangle, Check } from 'lucide-react';
+import { Code, Settings, Trash2, Plus, AlertTriangle, Check, FileText, Info } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
 function App() {
@@ -40,6 +40,7 @@ function App() {
   } = useMetaFlowBuilder();
 
   const [draggedComponentType, setDraggedComponentType] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const handleDragStart = (componentType: string) => {
     setDraggedComponentType(componentType);
@@ -86,6 +87,17 @@ function App() {
       if (remainingScreens.length > 0) {
         setCurrentScreen(remainingScreens[0].id);
       }
+    }
+  };
+
+  const handleCopyFlowJSON = async () => {
+    const flowJSON = generateMetaFlowJSON();
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(flowJSON, null, 2));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
     }
   };
 
@@ -297,17 +309,55 @@ function App() {
         </div>
         
         {/* Center - Enhanced WhatsApp Preview */}
-        <div className="flex-1 bg-gray-50 overflow-hidden min-w-0">
-          <MetaWhatsAppPreview 
-            screen={getCurrentScreen()} 
-            selectedComponent={selectedComponent}
-            validationErrors={validationErrors}
-            onSelectComponent={setSelectedComponent}
-            onDeleteComponent={handleDeleteComponent}
-            onAddScreen={addScreen}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-          />
+        <div className="flex-1 bg-gray-50 overflow-hidden min-w-0 flex flex-col">
+          {/* Preview Header */}
+          <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between flex-shrink-0">
+            <h2 className="text-lg font-semibold text-gray-900">Preview</h2>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={handleCopyFlowJSON}
+                className={`flex items-center space-x-2 px-3 py-2 text-sm rounded-lg transition-colors ${
+                  copied 
+                    ? 'bg-green-100 text-green-700' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                <FileText size={16} />
+                <span>{copied ? 'Copied!' : 'Copy Flow JSON'}</span>
+              </button>
+              <button className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors">
+                <Settings size={16} />
+              </button>
+            </div>
+          </div>
+
+          {/* Preview Content */}
+          <div className="flex-1 overflow-hidden">
+            <MetaWhatsAppPreview 
+              screen={getCurrentScreen()} 
+              selectedComponent={selectedComponent}
+              validationErrors={validationErrors}
+              onSelectComponent={setSelectedComponent}
+              onDeleteComponent={handleDeleteComponent}
+              onAddScreen={addScreen}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+            />
+          </div>
+
+          {/* Preview Footer */}
+          <div className="bg-white border-t border-gray-200 px-4 py-3 flex-shrink-0">
+            <div className="flex items-center justify-between text-xs text-gray-500">
+              <div className="flex items-center space-x-1">
+                <span>Managed by the business.</span>
+                <a href="#" className="text-blue-600 hover:text-blue-700">Learn more</a>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Info size={12} />
+                <span>Rendering and interaction varies based on device.</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Right Panel - Properties and JSON */}
