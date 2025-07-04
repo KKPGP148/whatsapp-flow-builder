@@ -46,6 +46,9 @@ export function MetaWhatsAppPreview({
     const isSelected = selectedComponent === componentId;
     const hasErrors = validationErrors[componentId]?.length > 0;
     
+    // Move props definition to the beginning of renderFlowComponent function
+    const props = component.props || component;
+    
     const handleClick = (e: React.MouseEvent) => {
       e.stopPropagation();
       if (onSelectComponent) {
@@ -61,8 +64,6 @@ export function MetaWhatsAppPreview({
     };
 
     const getComponentContent = () => {
-      const props = component.props || component;
-      
       switch (component.type) {
         case 'TextHeading':
           return (
