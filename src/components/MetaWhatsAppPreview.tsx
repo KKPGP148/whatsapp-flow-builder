@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MetaFlowScreen } from '../types/metaFlow';
-import { X, Battery, MoreVertical, Plus, AlertTriangle, Trash2, Info, Camera, Paperclip } from 'lucide-react';
+import { X, Battery, MoreVertical, Plus, AlertTriangle, Trash2, Camera, Paperclip } from 'lucide-react';
 
 interface MetaWhatsAppPreviewProps {
   screen: MetaFlowScreen | undefined;
@@ -545,18 +545,7 @@ export function MetaWhatsAppPreview({
           </div>
         )}
         
-        {isFooter ? (
-          // Footer renders as a simple button
-          <div className="mt-4">
-            {props['right-caption'] && (
-              <button className="w-full px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg text-sm font-medium transition-colors">
-                {props['right-caption']}
-              </button>
-            )}
-          </div>
-        ) : (
-          getComponentContent()
-        )}
+        {getComponentContent()}
       </div>
     );
   };
@@ -592,63 +581,102 @@ export function MetaWhatsAppPreview({
     <div className="flex-1 bg-gray-50 flex items-center justify-center p-4">
       {/* Mobile Device Frame */}
       <div className="relative w-80">
-        {/* Device Frame - Clean white card design */}
-        <div className="relative mx-auto w-80 bg-white rounded-lg shadow-md overflow-hidden">
-          
-          {/* Status Bar */}
-          <div className="bg-gray-50 text-gray-600 px-4 py-2 flex items-center justify-between text-xs">
-            <div className="flex items-center space-x-1">
-              <span className="font-medium">{formatTime()}</span>
+        {/* Device Frame - iOS-like design */}
+        <div className="relative mx-auto w-80 bg-black rounded-[2.5rem] p-1 shadow-2xl">
+          <div className="w-full h-[640px] bg-white rounded-[2.25rem] overflow-hidden flex flex-col">
+            
+            {/* Status Bar - iOS style */}
+            <div className="bg-white text-black px-6 py-3 flex items-center justify-between text-xs flex-shrink-0">
+              <div className="flex items-center space-x-1">
+                <div className="flex space-x-1">
+                  <div className="w-1 h-1 bg-black rounded-full"></div>
+                  <div className="w-1 h-1 bg-black rounded-full"></div>
+                  <div className="w-1 h-1 bg-black rounded-full"></div>
+                  <div className="w-1 h-1 bg-black rounded-full"></div>
+                </div>
+              </div>
+              <div className="font-medium">{formatTime()}</div>
+              <div className="flex items-center space-x-1">
+                <Battery size={12} />
+                <span>100%</span>
+              </div>
             </div>
-            <div className="flex items-center space-x-1">
-              <Battery size={12} />
-              <span>100%</span>
-            </div>
-          </div>
 
-          {/* Header */}
-          <div className="bg-white text-gray-900 px-4 py-3 flex items-center justify-between border-b border-gray-200">
-            <X size={20} className="text-gray-500" />
-            <div className="flex items-center space-x-3">
-              <div className="w-6 h-6 bg-green-500 rounded-full"></div>
-              <div className="text-center">
-                <div className="font-medium text-sm">
+            {/* WhatsApp Header */}
+            <div className="bg-green-600 text-white px-4 py-3 flex items-center space-x-3 flex-shrink-0 shadow-sm">
+              <X size={20} className="text-white" />
+              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                <div className="w-6 h-6 bg-green-600 rounded-full"></div>
+              </div>
+              <div className="flex-1">
+                <div className="font-medium text-base">
                   {screen.title}
                 </div>
+                <div className="text-xs opacity-90">
+                  WhatsApp Business
+                </div>
+              </div>
+              <MoreVertical size={20} className="text-white" />
+            </div>
+
+            {/* Chat Background with scrollable content */}
+            <div 
+              className="flex-1 overflow-y-auto min-h-0"
+              style={{
+                backgroundImage: `
+                  radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                  radial-gradient(circle at 40% 80%, rgba(120, 119, 198, 0.03) 0%, transparent 50%)
+                `,
+                backgroundColor: '#e5ddd5'
+              }}
+              onDrop={onDrop}
+              onDragOver={onDragOver}
+              onClick={() => onSelectComponent?.(null)}
+            >
+              <div className="p-4">
+                {nonFooterComponents.length === 0 ? (
+                  <div className="text-center py-8">
+                    <div className="w-12 h-12 mx-auto mb-3 bg-white bg-opacity-50 rounded-full flex items-center justify-center">
+                      <Plus size={20} className="text-gray-500" />
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">No components yet</p>
+                    <p className="text-xs text-gray-500">Drag components from the sidebar</p>
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
+                    {nonFooterComponents.map((child, index) => (
+                      <div key={index} className="group">
+                        {renderFlowComponent(child, index)}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
-            <MoreVertical size={20} className="text-gray-500" />
-          </div>
 
-          {/* Content Area */}
-          <div 
-            className="bg-white p-4 min-h-[400px] max-h-[500px] overflow-y-auto"
-            onDrop={onDrop}
-            onDragOver={onDragOver}
-            onClick={() => onSelectComponent?.(null)}
-          >
-            {nonFooterComponents.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
-                  <Plus size={20} className="text-gray-400" />
-                </div>
-                <p className="text-sm text-gray-500 mb-2">No components yet</p>
-                <p className="text-xs text-gray-400">Drag components from the sidebar</p>
-              </div>
-            ) : (
-              <div>
-                {nonFooterComponents.map((child, index) => (
-                  <div key={index} className="group">
-                    {renderFlowComponent(child, index)}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Footer Component */}
+            {/* Fixed Footer */}
             {footerComponent && (
-              <div className="mt-4">
-                {renderFlowComponent(footerComponent, screen.layout.children.indexOf(footerComponent))}
+              <div className="bg-white border-t border-gray-200 p-3 flex-shrink-0">
+                <div className="flex items-center justify-between">
+                  {footerComponent.props?.['left-caption'] && (
+                    <button className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                      {footerComponent.props['left-caption']}
+                    </button>
+                  )}
+                  
+                  {footerComponent.props?.['center-caption'] && (
+                    <span className="text-xs text-gray-500 font-medium">
+                      {footerComponent.props['center-caption']}
+                    </span>
+                  )}
+                  
+                  {footerComponent.props?.['right-caption'] && (
+                    <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-sm font-medium transition-colors">
+                      {footerComponent.props['right-caption']}
+                    </button>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -660,6 +688,8 @@ export function MetaWhatsAppPreview({
             <h3 className="text-sm font-medium text-gray-900 mb-1">{screen.title}</h3>
             <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
               <span>Components: {screen.layout.children.length}</span>
+              <span>•</span>
+              <span>Max: 10 components</span>
               {screen.success && (
                 <>
                   <span>•</span>
