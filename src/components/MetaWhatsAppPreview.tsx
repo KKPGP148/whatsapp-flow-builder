@@ -28,7 +28,7 @@ export function MetaWhatsAppPreview({
   const formatTime = () => {
     const now = new Date();
     return now.toLocaleTimeString('en-US', { 
-      hour: 'numeric', 
+      hour: '2-digit', 
       minute: '2-digit',
       hour12: false 
     });
@@ -579,14 +579,14 @@ export function MetaWhatsAppPreview({
 
   return (
     <div className="flex-1 bg-gray-50 flex items-center justify-center p-4">
-      {/* Mobile Device Frame */}
-      <div className="relative w-80">
-        {/* Device Frame - iOS-like design */}
-        <div className="relative mx-auto w-80 bg-black rounded-[2.5rem] p-1 shadow-2xl">
-          <div className="w-full h-[640px] bg-white rounded-[2.25rem] overflow-hidden flex flex-col">
+      {/* Mobile Device Frame - Adjusted to match Meta preview dimensions */}
+      <div className="relative w-[280px]">
+        {/* Device Frame - iOS-like design with adjusted proportions */}
+        <div className="relative mx-auto w-[280px] bg-black rounded-[2rem] p-1 shadow-2xl">
+          <div className="w-full h-[560px] bg-white rounded-[1.75rem] overflow-hidden flex flex-col">
             
-            {/* Status Bar - iOS style */}
-            <div className="bg-white text-black px-6 py-3 flex items-center justify-between text-xs flex-shrink-0">
+            {/* Status Bar - iOS style with exact time format */}
+            <div className="bg-white text-black px-4 py-2 flex items-center justify-between text-xs flex-shrink-0">
               <div className="flex items-center space-x-1">
                 <div className="flex space-x-1">
                   <div className="w-1 h-1 bg-black rounded-full"></div>
@@ -602,24 +602,24 @@ export function MetaWhatsAppPreview({
               </div>
             </div>
 
-            {/* WhatsApp Header */}
+            {/* WhatsApp Header - Refined to match Meta preview */}
             <div className="bg-green-600 text-white px-4 py-3 flex items-center space-x-3 flex-shrink-0 shadow-sm">
-              <X size={20} className="text-white" />
-              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                <div className="w-6 h-6 bg-green-600 rounded-full"></div>
+              <X size={18} className="text-white" />
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                {/* Solid green circle without nested elements */}
               </div>
               <div className="flex-1">
-                <div className="font-medium text-base">
+                <div className="font-medium text-sm">
                   {screen.title}
                 </div>
                 <div className="text-xs opacity-90">
                   WhatsApp Business
                 </div>
               </div>
-              <MoreVertical size={20} className="text-white" />
+              <MoreVertical size={18} className="text-white" />
             </div>
 
-            {/* Chat Background with scrollable content */}
+            {/* Chat Background with scrollable content - Removed extra container styling */}
             <div 
               className="flex-1 overflow-y-auto min-h-0"
               style={{
@@ -634,7 +634,7 @@ export function MetaWhatsAppPreview({
               onDragOver={onDragOver}
               onClick={() => onSelectComponent?.(null)}
             >
-              <div className="p-4">
+              <div className="p-3">
                 {nonFooterComponents.length === 0 ? (
                   <div className="text-center py-8">
                     <div className="w-12 h-12 mx-auto mb-3 bg-white bg-opacity-50 rounded-full flex items-center justify-center">
@@ -644,7 +644,7 @@ export function MetaWhatsAppPreview({
                     <p className="text-xs text-gray-500">Drag components from the sidebar</p>
                   </div>
                 ) : (
-                  <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
+                  <div className="bg-white rounded-lg shadow-sm p-3 mb-3">
                     {nonFooterComponents.map((child, index) => (
                       <div key={index} className="group">
                         {renderFlowComponent(child, index)}
@@ -655,7 +655,7 @@ export function MetaWhatsAppPreview({
               </div>
             </div>
 
-            {/* Fixed Footer */}
+            {/* Fixed Footer - Styled to match Meta preview */}
             {footerComponent && (
               <div className="bg-white border-t border-gray-200 p-3 flex-shrink-0">
                 <div className="flex items-center justify-between">
@@ -672,7 +672,7 @@ export function MetaWhatsAppPreview({
                   )}
                   
                   {footerComponent.props?.['right-caption'] && (
-                    <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-sm font-medium transition-colors">
+                    <button className="w-full max-w-[200px] py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-full text-sm font-medium transition-colors">
                       {footerComponent.props['right-caption']}
                     </button>
                   )}
@@ -682,24 +682,24 @@ export function MetaWhatsAppPreview({
           </div>
         </div>
 
-        {/* Screen Info */}
-        <div className="mt-4 text-center">
-          <div className="bg-white rounded-lg p-3 shadow-sm">
-            <h3 className="text-sm font-medium text-gray-900 mb-1">{screen.title}</h3>
-            <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
+        {/* Screen Info - Compact */}
+        <div className="mt-3 text-center">
+          <div className="bg-white rounded-lg p-2 shadow-sm">
+            <h3 className="text-xs font-medium text-gray-900 mb-1">{screen.title}</h3>
+            <div className="flex items-center justify-center space-x-3 text-xs text-gray-500">
               <span>Components: {screen.layout.children.length}</span>
               <span>•</span>
-              <span>Max: 10 components</span>
+              <span>Max: 10</span>
               {screen.success && (
                 <>
                   <span>•</span>
-                  <span className="text-green-600">Success Screen</span>
+                  <span className="text-green-600">Success</span>
                 </>
               )}
               {screen.terminal && (
                 <>
                   <span>•</span>
-                  <span className="text-red-600">Terminal Screen</span>
+                  <span className="text-red-600">Terminal</span>
                 </>
               )}
             </div>
