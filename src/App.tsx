@@ -6,7 +6,7 @@ import { MetaJSONEditor } from './components/MetaJSONEditor';
 import { useMetaFlowBuilder } from './hooks/useMetaFlowBuilder';
 import { MetaFlowComponent, MetaFlow } from './types/metaFlow';
 import { metaComponentLibrary } from './data/metaComponentLibrary';
-import { Code, Settings, Trash2, Plus, AlertTriangle, Check } from 'lucide-react';
+import { Code, Settings, Trash2, Plus } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 
 function App() {
@@ -55,6 +55,16 @@ function App() {
 
     const componentDef = metaComponentLibrary.find(def => def.type === draggedComponentType);
     if (!componentDef) return;
+
+    // Check if we already have 10 components (excluding footer)
+    const currentScreenData = getCurrentScreen();
+    if (currentScreenData) {
+      const nonFooterComponents = currentScreenData.layout.children.filter(child => child.type !== 'Footer');
+      if (nonFooterComponents.length >= 10) {
+        // Visual feedback only - no alert
+        return;
+      }
+    }
 
     const newComponent: MetaFlowComponent = {
       id: uuidv4(),
@@ -166,7 +176,7 @@ function App() {
 
   return (
     <div className="h-screen bg-gray-50 flex flex-col max-h-screen overflow-hidden">
-      {/* Enhanced Header */}
+      {/* Clean Header */}
       <div className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-6 flex-shrink-0">
         <div className="flex items-center space-x-6">
           <div className="flex items-center space-x-3">
@@ -176,18 +186,6 @@ function App() {
               </div>
               <h1 className="text-lg font-semibold text-gray-900">Meta Flow Builder</h1>
             </div>
-            
-            {hasValidationErrors ? (
-              <div className="flex items-center space-x-1 text-red-600 bg-red-50 px-2 py-1 rounded-full">
-                <AlertTriangle size={12} />
-                <span className="text-xs font-medium">Errors</span>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-1 text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                <Check size={12} />
-                <span className="text-xs font-medium">Valid</span>
-              </div>
-            )}
           </div>
           
           <div className="flex items-center space-x-1">

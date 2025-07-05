@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MetaFlowScreen } from '../types/metaFlow';
-import { Phone, Battery, Wifi, Signal, MoreVertical, Plus, AlertTriangle, Trash2, MessageCircle, ArrowLeft, Video, PhoneCall } from 'lucide-react';
+import { X, Battery, MoreVertical, Plus, AlertTriangle, Trash2, Camera, Paperclip } from 'lucide-react';
 
 interface MetaWhatsAppPreviewProps {
   screen: MetaFlowScreen | undefined;
@@ -23,25 +23,15 @@ export function MetaWhatsAppPreview({
   onDrop,
   onDragOver
 }: MetaWhatsAppPreviewProps) {
-  const [deviceType, setDeviceType] = useState<'android' | 'ios'>('android');
-  const [isFormMode, setIsFormMode] = useState(false);
   const [formData, setFormData] = useState<Record<string, any>>({});
 
   const formatTime = () => {
     const now = new Date();
-    if (deviceType === 'ios') {
-      return now.toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
-        minute: '2-digit',
-        hour12: false 
-      });
-    } else {
-      return now.toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: false 
-      });
-    }
+    return now.toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: false 
+    });
   };
 
   const handleFormInputChange = (fieldName: string, value: any) => {
@@ -51,26 +41,13 @@ export function MetaWhatsAppPreview({
     }));
   };
 
-  const renderBusinessMessage = (content: React.ReactNode, isFooter: boolean = false) => {
-    if (isFooter) {
-      return content;
-    }
-    
-    return (
-      <div className="flex justify-start mb-3">
-        <div className="bg-white rounded-lg px-3 py-2 max-w-[85%] shadow-sm border border-gray-200">
-          <div className="text-gray-800">
-            {content}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const renderFlowComponent = (component: any, index: number) => {
     const componentId = screen ? `${screen.id}_${index}` : '';
     const isSelected = selectedComponent === componentId;
     const hasErrors = validationErrors[componentId]?.length > 0;
+    
+    // Move props definition to the beginning of renderFlowComponent function
+    const props = component.props || component;
     
     const handleClick = (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -87,72 +64,69 @@ export function MetaWhatsAppPreview({
     };
 
     const getComponentContent = () => {
-      const props = component.props || component;
-      
       switch (component.type) {
         case 'TextHeading':
           return (
-            <div className="text-center">
-              <h1 className="text-lg font-bold text-gray-900 leading-tight">
-                {props.text || 'Heading Text'}
-              </h1>
-            </div>
+            <h1 className={`text-lg font-bold text-gray-900 leading-tight mb-3 ${
+              props['text-align'] === 'center' ? 'text-center' : 
+              props['text-align'] === 'right' ? 'text-right' : 'text-left'
+            }`}>
+              {props.text || 'Heading Text'}
+            </h1>
           );
           
         case 'TextSubheading':
           return (
-            <div className="text-center">
-              <h2 className="text-base font-semibold text-gray-800 leading-tight">
-                {props.text || 'Subheading Text'}
-              </h2>
-            </div>
+            <h2 className={`text-base font-semibold text-gray-800 leading-tight mb-2 ${
+              props['text-align'] === 'center' ? 'text-center' : 
+              props['text-align'] === 'right' ? 'text-right' : 'text-left'
+            }`}>
+              {props.text || 'Subheading Text'}
+            </h2>
           );
           
         case 'TextBody':
           return (
-            <div className="text-center">
-              <p className={`text-sm text-gray-700 leading-relaxed ${
-                props['text-align'] === 'center' ? 'text-center' : 
-                props['text-align'] === 'right' ? 'text-right' : 'text-left'
-              } ${props['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}>
-                {props.text || 'Body text content'}
-              </p>
-            </div>
+            <p className={`text-sm text-gray-700 leading-relaxed mb-3 ${
+              props['text-align'] === 'center' ? 'text-center' : 
+              props['text-align'] === 'right' ? 'text-right' : 'text-left'
+            } ${props['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}>
+              {props.text || 'Body text content'}
+            </p>
           );
           
         case 'TextCaption':
           return (
-            <div className="text-center">
-              <p className="text-xs text-gray-500 leading-relaxed">
-                {props.text || 'Caption text'}
-              </p>
-            </div>
+            <p className={`text-xs text-gray-500 leading-relaxed mb-2 ${
+              props['text-align'] === 'center' ? 'text-center' : 
+              props['text-align'] === 'right' ? 'text-right' : 'text-left'
+            }`}>
+              {props.text || 'Caption text'}
+            </p>
           );
           
         case 'RichText':
           return (
-            <div className="text-center">
-              <div className={`text-sm text-gray-700 leading-relaxed ${
-                props['text-align'] === 'center' ? 'text-center' : 
-                props['text-align'] === 'right' ? 'text-right' : 'text-left'
-              } ${props['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}
-                dangerouslySetInnerHTML={{
-                  __html: (props.text || 'Rich text content')
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                    .replace(/~(.*?)~/g, '<del>$1</del>')
-                }}
-              />
-            </div>
+            <div className={`text-sm text-gray-700 leading-relaxed mb-3 ${
+              props['text-align'] === 'center' ? 'text-center' : 
+              props['text-align'] === 'right' ? 'text-right' : 'text-left'
+            } ${props['font-weight'] === 'bold' ? 'font-bold' : 'font-normal'}`}
+              dangerouslySetInnerHTML={{
+                __html: (props.text || 'Rich text content')
+                  .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                  .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                  .replace(/~(.*?)~/g, '<del>$1</del>')
+              }}
+            />
           );
           
         case 'Image':
           return (
-            <div className="mb-2">
+            <div className="mb-4">
               <img
                 src={props.src || 'https://images.pexels.com/photos/147411/italy-mountains-dawn-daybreak-147411.jpeg?auto=compress&cs=tinysrgb&w=400'}
                 alt={props['alt-text'] || 'Image'}
-                className="rounded-lg max-w-full"
+                className="rounded-lg max-w-full max-h-[200px] w-full"
                 style={{ 
                   objectFit: props['scale-type'] === 'contain' ? 'contain' : 'cover'
                 }}
@@ -165,7 +139,7 @@ export function MetaWhatsAppPreview({
           
         case 'TextInput':
           return (
-            <div className="space-y-2">
+            <div className="space-y-2 mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Input Label'}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
@@ -176,17 +150,20 @@ export function MetaWhatsAppPreview({
                 value={formData[props.name] || ''}
                 onChange={(e) => handleFormInputChange(props.name, e.target.value)}
                 disabled={!props.enabled}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 text-sm bg-white"
               />
               {props['helper-text'] && (
-                <p className="text-sm text-gray-500">{props['helper-text']}</p>
+                <p className="text-xs text-gray-500">{props['helper-text']}</p>
               )}
             </div>
           );
           
         case 'TextArea':
+          const currentLength = (formData[props.name] || '').length;
+          const maxLength = props['max-length'] || 1000;
+          
           return (
-            <div className="space-y-2">
+            <div className="space-y-2 mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'TextArea Label'}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
@@ -196,19 +173,24 @@ export function MetaWhatsAppPreview({
                 value={formData[props.name] || ''}
                 onChange={(e) => handleFormInputChange(props.name, e.target.value)}
                 disabled={!props.enabled}
-                maxLength={props['max-length'] || 1000}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
+                maxLength={maxLength}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 text-sm bg-white resize-none"
                 rows={3}
               />
-              {props['helper-text'] && (
-                <p className="text-sm text-gray-500">{props['helper-text']}</p>
-              )}
+              <div className="flex justify-between items-center">
+                {props['helper-text'] && (
+                  <p className="text-xs text-gray-500">{props['helper-text']}</p>
+                )}
+                <p className="text-xs text-gray-400 ml-auto">
+                  {currentLength} / {maxLength}
+                </p>
+              </div>
             </div>
           );
           
         case 'DatePicker':
           return (
-            <div className="space-y-2">
+            <div className="space-y-2 mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Select Date'}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
@@ -218,10 +200,10 @@ export function MetaWhatsAppPreview({
                 value={formData[props.name] || ''}
                 onChange={(e) => handleFormInputChange(props.name, e.target.value)}
                 disabled={!props.enabled}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 text-sm bg-white"
               />
               {props['availability-selector']?.enabled && (
-                <p className="text-sm text-gray-500">
+                <p className="text-xs text-gray-500">
                   Available for next {props['availability-selector']['num-days']} days
                 </p>
               )}
@@ -230,14 +212,14 @@ export function MetaWhatsAppPreview({
           
         case 'CheckboxGroup':
           return (
-            <div className="space-y-3">
+            <div className="space-y-3 mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Select Options'}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
               </label>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {(props['data-source'] || []).map((option: any, optIndex: number) => (
-                  <label key={optIndex} className="flex items-center space-x-3 cursor-pointer">
+                  <label key={optIndex} className="flex items-start space-x-3 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData[props.name]?.includes(option.id) || false}
@@ -249,12 +231,12 @@ export function MetaWhatsAppPreview({
                         handleFormInputChange(props.name, newValues);
                       }}
                       disabled={!props.enabled}
-                      className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-0.5"
                     />
                     <div className="flex-1">
-                      <span className="text-base text-gray-700 font-medium">{option.title}</span>
+                      <span className="text-sm text-gray-700">{option.title}</span>
                       {option.description && (
-                        <p className="text-sm text-gray-500 mt-1">{option.description}</p>
+                        <p className="text-xs text-gray-500">{option.description}</p>
                       )}
                     </div>
                   </label>
@@ -270,14 +252,14 @@ export function MetaWhatsAppPreview({
           
         case 'RadioButtonsGroup':
           return (
-            <div className="space-y-3">
+            <div className="space-y-3 mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Choose Option'}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
               </label>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {(props['data-source'] || []).map((option: any, optIndex: number) => (
-                  <label key={optIndex} className="flex items-center space-x-3 cursor-pointer">
+                  <label key={optIndex} className="flex items-start space-x-3 cursor-pointer">
                     <input
                       type="radio"
                       name={props.name}
@@ -285,12 +267,12 @@ export function MetaWhatsAppPreview({
                       checked={formData[props.name] === option.id}
                       onChange={(e) => handleFormInputChange(props.name, e.target.value)}
                       disabled={!props.enabled}
-                      className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
+                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500 mt-0.5"
                     />
                     <div className="flex-1">
-                      <span className="text-base text-gray-700 font-medium">{option.title}</span>
+                      <span className="text-sm text-gray-700">{option.title}</span>
                       {option.description && (
-                        <p className="text-sm text-gray-500 mt-1">{option.description}</p>
+                        <p className="text-xs text-gray-500">{option.description}</p>
                       )}
                     </div>
                   </label>
@@ -301,7 +283,7 @@ export function MetaWhatsAppPreview({
           
         case 'Dropdown':
           return (
-            <div className="space-y-2">
+            <div className="space-y-2 mb-4">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Select Option'}
                 {props.required && <span className="text-red-500 ml-1">*</span>}
@@ -310,7 +292,7 @@ export function MetaWhatsAppPreview({
                 value={formData[props.name] || ''}
                 onChange={(e) => handleFormInputChange(props.name, e.target.value)}
                 disabled={!props.enabled}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 text-sm bg-white"
               >
                 <option value="">Select an option</option>
                 {(props['data-source'] || []).map((option: any, optIndex: number) => (
@@ -324,8 +306,8 @@ export function MetaWhatsAppPreview({
 
         case 'ChipSelector':
           return (
-            <div className="space-y-2 mb-3">
-              <label className="block text-sm font-medium text-gray-700">
+            <div className="space-y-2 mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 {props.label || 'Select Tags'}
               </label>
               <div className="flex flex-wrap gap-2">
@@ -335,7 +317,7 @@ export function MetaWhatsAppPreview({
                     className={`px-3 py-1 rounded-full text-xs border cursor-pointer transition-colors ${
                       props['chip-style'] === 'secondary'
                         ? 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                        : 'border-green-300 text-green-700 hover:bg-green-50'
+                        : 'border-blue-300 text-blue-700 hover:bg-blue-50'
                     }`}
                   >
                     {option.title}
@@ -352,7 +334,7 @@ export function MetaWhatsAppPreview({
 
         case 'NavigationList':
           return (
-            <div className="space-y-2 mb-3">
+            <div className="space-y-2 mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {props.label || 'Choose Option'}
               </label>
@@ -386,15 +368,12 @@ export function MetaWhatsAppPreview({
 
         case 'PhotoPicker':
           return (
-            <div className="space-y-2 mb-3">
+            <div className="space-y-2 mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {props.label || 'Upload Photos'}
               </label>
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center bg-gray-50">
-                <svg className="w-8 h-8 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
+                <Camera size={24} className="mx-auto text-gray-400 mb-2" />
                 <p className="text-sm text-gray-600">
                   {props['photo-source'] === 'camera' ? 'Take Photo' :
                    props['photo-source'] === 'gallery' ? 'Choose from Gallery' :
@@ -411,37 +390,49 @@ export function MetaWhatsAppPreview({
 
         case 'DocumentPicker':
           return (
-            <div className="flex items-center justify-between bg-gray-50 px-4 py-3 rounded-lg">
-              <span className="text-xs text-gray-500">{props['left-caption'] || ''}</span>
-              <span className="text-xs text-gray-500">{props['center-caption'] || ''}</span>
-              <button className="text-sm font-medium text-green-600 hover:text-green-700">
-                {props['right-caption'] || 'Continue'}
-              </button>
+            <div className="space-y-2 mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {props.label || 'Upload Document'}
+              </label>
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center bg-gray-50">
+                <Paperclip size={24} className="mx-auto text-gray-400 mb-2" />
+                <p className="text-sm text-gray-600">Choose Document</p>
+                {props['allowed-types'] && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Allowed: {props['allowed-types'].join(', ')}
+                  </p>
+                )}
+                {props['max-file-size'] && (
+                  <p className="text-xs text-gray-500">
+                    Max size: {Math.round(props['max-file-size'] / 1024 / 1024)}MB
+                  </p>
+                )}
+              </div>
             </div>
           );
           
         case 'OptIn':
           return (
-            <div className="space-y-2">
+            <div className="space-y-2 mb-4">
               <label className="flex items-start space-x-3 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={formData[props.name] || false}
                   onChange={(e) => handleFormInputChange(props.name, e.target.checked)}
                   disabled={!props.enabled}
-                  className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500 mt-0.5"
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-0.5"
                 />
-                <span className="text-sm text-gray-700">{props.label || 'Opt-in text'}</span>
+                <span className="text-sm text-gray-700">{props.label || 'I agree to the terms'}</span>
               </label>
             </div>
           );
           
         case 'EmbeddedLink':
           return (
-            <div className="text-center mb-2">
+            <div className="text-center mb-4">
               <a 
                 href={props.href || '#'} 
-                className="text-sm text-green-600 hover:text-green-700 underline"
+                className="text-sm text-blue-600 hover:text-blue-700 underline inline-flex items-center space-x-1"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -455,7 +446,7 @@ export function MetaWhatsAppPreview({
 
         case 'If':
           return (
-            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg mb-3">
+            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg mb-4">
               <p className="text-sm font-medium text-yellow-800 mb-1">Conditional Logic</p>
               <p className="text-xs text-yellow-700">
                 If {props.condition?.variable} {props.condition?.operator} "{props.condition?.value}"
@@ -469,7 +460,7 @@ export function MetaWhatsAppPreview({
 
         case 'Switch':
           return (
-            <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg mb-3">
+            <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg mb-4">
               <p className="text-sm font-medium text-purple-800 mb-1">Multi-Case Logic</p>
               <p className="text-xs text-purple-700 mb-2">
                 Switch on: {props['switch-on']}
@@ -488,7 +479,7 @@ export function MetaWhatsAppPreview({
 
         case 'DataExchange':
           return (
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg mb-3">
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg mb-4">
               <p className="text-sm font-medium text-blue-800 mb-1">API Call</p>
               <p className="text-xs text-blue-700 mb-1">
                 {props.method} {props.endpoint?.split('/').pop()}
@@ -503,7 +494,7 @@ export function MetaWhatsAppPreview({
 
         case 'FlowCompletion':
           return (
-            <div className="p-3 bg-green-50 border border-green-200 rounded-lg mb-3">
+            <div className="p-3 bg-green-50 border border-green-200 rounded-lg mb-4">
               <p className="text-sm font-medium text-green-800 mb-1">
                 {props['completion-type'] === 'success' ? 'Success' : 'Error'} Completion
               </p>
@@ -520,7 +511,7 @@ export function MetaWhatsAppPreview({
           
         default:
           return (
-            <div className="text-center text-gray-500 text-sm">
+            <div className="text-center text-gray-500 text-sm mb-4">
               {component.type} component
             </div>
           );
@@ -531,30 +522,30 @@ export function MetaWhatsAppPreview({
 
     return (
       <div 
-        className={`relative p-4 border rounded-lg transition-all cursor-pointer ${
-          isSelected 
-            ? 'border-blue-500 bg-blue-50 shadow-md' 
-            : 'border-gray-200 bg-white hover:border-gray-300'
-        } ${hasErrors ? 'border-red-300 bg-red-50' : ''}`}
+        className={`relative transition-all cursor-pointer group ${
+          isSelected && !isFooter ? 'ring-2 ring-blue-400 ring-opacity-75 rounded-lg' : ''
+        } ${hasErrors && !isFooter ? 'ring-2 ring-red-400 ring-opacity-75 rounded-lg' : ''}`}
         onClick={handleClick}
       >
-        {/* Delete button */}
-        <button
-          onClick={handleDelete}
-          className="absolute top-2 right-2 p-1 text-red-500 hover:text-red-700 hover:bg-red-100 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-          title="Delete component"
-        >
-          <Trash2 size={14} />
-        </button>
+        {/* Delete button for non-footer components */}
+        {!isFooter && (
+          <button
+            onClick={handleDelete}
+            className="absolute top-1 right-1 p-1 text-red-500 hover:text-red-700 hover:bg-red-100 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10"
+            title="Delete component"
+          >
+            <Trash2 size={12} />
+          </button>
+        )}
         
         {/* Error indicator */}
-        {hasErrors && (
-          <div className="absolute top-2 left-2 p-1 text-red-500">
-            <AlertTriangle size={14} />
+        {hasErrors && !isFooter && (
+          <div className="absolute top-1 left-1 p-1 text-red-500 z-10">
+            <AlertTriangle size={12} />
           </div>
         )}
         
-        {componentContent}
+        {getComponentContent()}
       </div>
     );
   };
@@ -588,76 +579,21 @@ export function MetaWhatsAppPreview({
 
   return (
     <div className="flex-1 bg-gray-50 flex items-center justify-center p-4">
-      {/* Device Selector */}
-      <div className="absolute top-4 left-4 flex space-x-2 bg-white rounded-lg p-1 shadow-sm z-10">
-        <button
-          onClick={() => setDeviceType('android')}
-          className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-            deviceType === 'android' 
-              ? 'bg-green-100 text-green-700' 
-              : 'text-gray-600 hover:text-gray-800'
-          }`}
-        >
-          Android
-        </button>
-        <button
-          onClick={() => setDeviceType('ios')}
-          className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-            deviceType === 'ios' 
-              ? 'bg-green-100 text-green-700' 
-              : 'text-gray-600 hover:text-gray-800'
-          }`}
-        >
-          iOS
-        </button>
-      </div>
-
-      {/* Mode Toggle */}
-      <div className="absolute top-4 right-4 flex space-x-2 bg-white rounded-lg p-1 shadow-sm z-10">
-        <button
-          onClick={() => setIsFormMode(false)}
-          className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-            !isFormMode 
-              ? 'bg-blue-100 text-blue-700' 
-              : 'text-gray-600 hover:text-gray-800'
-          }`}
-        >
-          Preview
-        </button>
-        <button
-          onClick={() => setIsFormMode(true)}
-          className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-            isFormMode 
-              ? 'bg-blue-100 text-blue-700' 
-              : 'text-gray-600 hover:text-gray-800'
-          }`}
-        >
-          Fill Form
-        </button>
-      </div>
-
-      {/* Mobile Device Frame */}
-      <div className={`relative ${deviceType === 'ios' ? 'w-80' : 'w-80'}`}>
-        {/* Device Frame */}
-        <div className={`relative mx-auto ${deviceType === 'ios' ? 'w-80 h-[600px]' : 'w-80 h-[600px]'} bg-black rounded-3xl p-2 shadow-2xl`}>
-          <div className="w-full h-full bg-white rounded-2xl overflow-hidden">
-            {/* Status Bar */}
-            <div className={`${deviceType === 'ios' ? 'bg-black' : 'bg-green-600'} text-white px-4 py-2 flex items-center justify-between text-xs`}>
+      {/* Mobile Device Frame - Adjusted to match Meta preview dimensions */}
+      <div className="relative w-[280px]">
+        {/* Device Frame - iOS-like design with adjusted proportions */}
+        <div className="relative mx-auto w-[280px] bg-black rounded-[2rem] p-1 shadow-2xl">
+          <div className="w-full h-[560px] bg-white rounded-[1.75rem] overflow-hidden flex flex-col">
+            
+            {/* Status Bar - iOS style with exact time format */}
+            <div className="bg-white text-black px-4 py-2 flex items-center justify-between text-xs flex-shrink-0">
               <div className="flex items-center space-x-1">
-                {deviceType === 'ios' ? (
-                  <>
-                    <div className="flex space-x-1">
-                      <div className="w-1 h-1 bg-black rounded-full"></div>
-                      <div className="w-1 h-1 bg-black rounded-full"></div>
-                      <div className="w-1 h-1 bg-black rounded-full"></div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <Signal size={12} />
-                    <Wifi size={12} />
-                  </>
-                )}
+                <div className="flex space-x-1">
+                  <div className="w-1 h-1 bg-black rounded-full"></div>
+                  <div className="w-1 h-1 bg-black rounded-full"></div>
+                  <div className="w-1 h-1 bg-black rounded-full"></div>
+                  <div className="w-1 h-1 bg-black rounded-full"></div>
+                </div>
               </div>
               <div className="font-medium">{formatTime()}</div>
               <div className="flex items-center space-x-1">
@@ -666,43 +602,39 @@ export function MetaWhatsAppPreview({
               </div>
             </div>
 
-            {/* WhatsApp Header - Platform specific */}
-            <div className={`bg-green-600 text-white px-4 py-3 flex items-center space-x-3 flex-shrink-0 ${
-              deviceType === 'ios' ? 'shadow-sm' : ''
-            }`}>
-              <ArrowLeft size={20} className="text-white" />
-              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                <MessageCircle size={16} className="text-green-600" />
+            {/* WhatsApp Header - Refined to match Meta preview */}
+            <div className="bg-[#25D366] text-white px-4 py-3 flex items-center space-x-3 flex-shrink-0 shadow-sm">
+              <X size={18} className="text-white" />
+              <div className="w-8 h-8 bg-[#128c7e] rounded-full flex items-center justify-center">
+                {/* Solid green circle without nested elements */}
               </div>
               <div className="flex-1">
-                <div className={`font-medium ${deviceType === 'ios' ? 'text-base' : 'text-sm'}`}>
-                  Business
+                <div className="font-medium text-sm">
+                  {screen.title}
                 </div>
                 <div className="text-xs opacity-90">
-                  {deviceType === 'ios' ? 'WhatsApp Business' : 'online'}
+                  WhatsApp Business
                 </div>
               </div>
-              <div className="flex items-center space-x-3">
-                <Video size={20} className="text-white" />
-                <PhoneCall size={20} className="text-white" />
-                <MoreVertical size={20} className="text-white" />
-              </div>
+              <MoreVertical size={18} className="text-white" />
             </div>
 
-            {/* Chat Background */}
+            {/* Chat Background with scrollable content - Removed extra container styling */}
             <div 
               className="flex-1 overflow-y-auto min-h-0"
               style={{
-                backgroundImage: deviceType === 'ios' 
-                  ? 'linear-gradient(to bottom, #e5ddd5, #e5ddd5)'
-                  : 'linear-gradient(to bottom, #e5ddd5, #e5ddd5)',
-                backgroundSize: '100% 100%'
+                backgroundImage: `
+                  radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                  radial-gradient(circle at 40% 80%, rgba(120, 119, 198, 0.03) 0%, transparent 50%)
+                `,
+                backgroundColor: '#e5ddd5'
               }}
               onDrop={onDrop}
               onDragOver={onDragOver}
               onClick={() => onSelectComponent?.(null)}
             >
-              <div className="p-4">
+              <div className="p-3">
                 {nonFooterComponents.length === 0 ? (
                   <div className="text-center py-8">
                     <div className="w-12 h-12 mx-auto mb-3 bg-white bg-opacity-50 rounded-full flex items-center justify-center">
@@ -712,7 +644,7 @@ export function MetaWhatsAppPreview({
                     <p className="text-xs text-gray-500">Drag components from the sidebar</p>
                   </div>
                 ) : (
-                  <div className="space-y-1">
+                  <div className="bg-white rounded-lg shadow-sm p-3 mb-3">
                     {nonFooterComponents.map((child, index) => (
                       <div key={index} className="group">
                         {renderFlowComponent(child, index)}
@@ -723,32 +655,24 @@ export function MetaWhatsAppPreview({
               </div>
             </div>
 
-            {/* Footer - WhatsApp style input area */}
+            {/* Fixed Footer - Styled with green color palette */}
             {footerComponent && (
-              <div className="bg-white border-t border-gray-200 p-3 flex-shrink-0">
+              <div className="bg-[#075e54] border-t border-[#075e54] p-3 flex-shrink-0">
                 <div className="flex items-center justify-between">
                   {footerComponent.props?.['left-caption'] && (
-                    <button className={`text-sm font-medium transition-colors ${
-                      deviceType === 'ios' 
-                        ? 'text-blue-600 hover:text-blue-700' 
-                        : 'text-green-600 hover:text-green-700'
-                    }`}>
+                    <button className="text-sm font-medium text-white hover:text-gray-200 transition-colors">
                       {footerComponent.props['left-caption']}
                     </button>
                   )}
                   
                   {footerComponent.props?.['center-caption'] && (
-                    <span className="text-xs text-gray-500 font-medium">
+                    <span className="text-xs text-white font-medium">
                       {footerComponent.props['center-caption']}
                     </span>
                   )}
                   
                   {footerComponent.props?.['right-caption'] && (
-                    <button className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                      deviceType === 'ios'
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                        : 'bg-green-600 hover:bg-green-700 text-white'
-                    }`}>
+                    <button className="px-4 py-2 bg-[#25D366] hover:bg-[#128c7e] text-white rounded-full text-sm font-medium transition-colors">
                       {footerComponent.props['right-caption']}
                     </button>
                   )}
@@ -758,24 +682,24 @@ export function MetaWhatsAppPreview({
           </div>
         </div>
 
-        {/* Screen Info */}
-        <div className="mt-4 text-center">
-          <div className="bg-white rounded-lg p-3 shadow-sm">
-            <h3 className="text-sm font-medium text-gray-900 mb-1">{screen.title}</h3>
-            <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
+        {/* Screen Info - Compact */}
+        <div className="mt-3 text-center">
+          <div className="bg-white rounded-lg p-2 shadow-sm">
+            <h3 className="text-xs font-medium text-gray-900 mb-1">{screen.title}</h3>
+            <div className="flex items-center justify-center space-x-3 text-xs text-gray-500">
               <span>Components: {screen.layout.children.length}</span>
               <span>•</span>
-              <span>Platform: {deviceType === 'ios' ? 'iOS' : 'Android'}</span>
+              <span>Max: 10</span>
               {screen.success && (
                 <>
                   <span>•</span>
-                  <span className="text-green-600">Success Screen</span>
+                  <span className="text-green-600">Success</span>
                 </>
               )}
               {screen.terminal && (
                 <>
                   <span>•</span>
-                  <span className="text-red-600">Terminal Screen</span>
+                  <span className="text-red-600">Terminal</span>
                 </>
               )}
             </div>

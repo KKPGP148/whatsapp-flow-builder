@@ -65,7 +65,7 @@ export function WhatsAppFlowPreview({
         case 'TextHeading':
           return (
             <div className="text-center">
-              <h1 className="text-xl font-bold text-gray-900 leading-tight mb-2">
+              <h1 className="text-lg font-bold text-gray-900 leading-tight">
                 {props.text || 'Heading Text'}
               </h1>
             </div>
@@ -74,7 +74,7 @@ export function WhatsAppFlowPreview({
         case 'TextBody':
           return (
             <div className="text-center">
-              <p className="text-base text-gray-700 leading-relaxed">
+              <p className="text-sm text-gray-700 leading-relaxed">
                 {props.text || 'Body text content'}
               </p>
             </div>
@@ -82,10 +82,10 @@ export function WhatsAppFlowPreview({
           
         case 'TextInput':
           return (
-            <div className="space-y-3">
+            <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Input Label'}
-                {props.required && <span className="text-red-500 ml-1">*</span>}
+                {props.required && <span className="text-red-500">*</span>}
               </label>
               <input
                 type={props['input-type'] || 'text'}
@@ -93,24 +93,24 @@ export function WhatsAppFlowPreview({
                 value={formData[props.name] || ''}
                 onChange={(e) => handleFormInputChange(props.name, e.target.value)}
                 disabled={!props.enabled}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-base transition-colors"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
               />
             </div>
           );
           
         case 'TextArea':
           return (
-            <div className="space-y-3">
+            <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'TextArea Label'}
-                {props.required && <span className="text-red-500 ml-1">*</span>}
+                {props.required && <span className="text-red-500">*</span>}
               </label>
               <textarea
                 placeholder={props.placeholder || 'Enter text...'}
                 value={formData[props.name] || ''}
                 onChange={(e) => handleFormInputChange(props.name, e.target.value)}
                 disabled={!props.enabled}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-base transition-colors"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 text-sm"
                 rows={3}
               />
             </div>
@@ -118,14 +118,14 @@ export function WhatsAppFlowPreview({
           
         case 'CheckboxGroup':
           return (
-            <div className="space-y-4">
+            <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
                 {props.label || 'Select Options'}
-                {props.required && <span className="text-red-500 ml-1">*</span>}
+                {props.required && <span className="text-red-500">*</span>}
               </label>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {(props['data-source'] || []).map((option: any, optIndex: number) => (
-                  <label key={optIndex} className="flex items-start space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <label key={optIndex} className="flex items-center space-x-3 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={formData[props.name]?.includes(option.id) || false}
@@ -137,9 +137,9 @@ export function WhatsAppFlowPreview({
                         handleFormInputChange(props.name, newValues);
                       }}
                       disabled={!props.enabled}
-                      className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500 mt-0.5"
+                      className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                     />
-                    <span className="text-base text-gray-700 font-medium">{option.title}</span>
+                    <span className="text-sm text-gray-700">{option.title}</span>
                   </label>
                 ))}
               </div>
@@ -148,10 +148,10 @@ export function WhatsAppFlowPreview({
           
         case 'Footer':
           return (
-            <div className="flex items-center justify-between bg-gray-50 px-4 py-4 rounded-lg border-t border-gray-200">
-              <span className="text-sm text-gray-500">{props['left-caption'] || ''}</span>
-              <span className="text-sm text-gray-500">{props['center-caption'] || ''}</span>
-              <button className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors">
+            <div className="flex items-center justify-between bg-gray-50 px-4 py-3 rounded-lg">
+              <span className="text-xs text-gray-500">{props['left-caption'] || ''}</span>
+              <span className="text-xs text-gray-500">{props['center-caption'] || ''}</span>
+              <button className="text-sm font-medium text-green-600 hover:text-green-700">
                 {props['right-caption'] || 'Continue'}
               </button>
             </div>
@@ -168,17 +168,17 @@ export function WhatsAppFlowPreview({
 
     return (
       <div 
-        className={`relative bg-white rounded-lg shadow-sm border border-gray-200 transition-all cursor-pointer ${
+        className={`relative p-4 border rounded-lg transition-all cursor-pointer ${
           isSelected 
-            ? 'ring-2 ring-blue-500 shadow-md' 
-            : 'hover:shadow-md hover:border-gray-300'
+            ? 'border-blue-500 bg-blue-50 shadow-md' 
+            : 'border-gray-200 bg-white hover:border-gray-300'
         } ${hasErrors ? 'border-red-300 bg-red-50' : ''}`}
         onClick={handleClick}
       >
         {/* Delete button */}
         <button
           onClick={handleDelete}
-          className="absolute top-2 right-2 p-1 text-red-500 hover:text-red-700 hover:bg-red-100 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10"
+          className="absolute top-2 right-2 p-1 text-red-500 hover:text-red-700 hover:bg-red-100 rounded opacity-0 group-hover:opacity-100 transition-opacity"
           title="Delete component"
         >
           <Trash2 size={14} />
@@ -186,14 +186,12 @@ export function WhatsAppFlowPreview({
         
         {/* Error indicator */}
         {hasErrors && (
-          <div className="absolute top-2 left-2 p-1 text-red-500 z-10">
+          <div className="absolute top-2 left-2 p-1 text-red-500">
             <AlertTriangle size={14} />
           </div>
         )}
         
-        <div className="p-4">
-          {getComponentContent()}
-        </div>
+        {getComponentContent()}
       </div>
     );
   };
@@ -270,8 +268,8 @@ export function WhatsAppFlowPreview({
       </div>
 
       {/* Mobile Device Frame */}
-      <div className="relative">
-        <div className="relative mx-auto w-80 h-[700px] bg-black rounded-3xl p-2 shadow-2xl">
+      <div className="relative w-80">
+        <div className="relative mx-auto w-80 h-[600px] bg-black rounded-3xl p-2 shadow-2xl">
           <div className="w-full h-full bg-white rounded-2xl overflow-hidden">
             {/* Status Bar */}
             <div className={`${deviceType === 'ios' ? 'bg-black' : 'bg-green-600'} text-white px-4 py-2 flex items-center justify-between text-xs`}>

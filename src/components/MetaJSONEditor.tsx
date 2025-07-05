@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import { MetaFlow } from '../types/metaFlow';
 import { metaFlowsAPI, flowCategories, type FlowCategory } from '../config/metaApi';
-import { Copy, Download, Play, CheckCircle, AlertTriangle, Settings, RefreshCw, FileText, Zap, ExternalLink, Upload, Clipboard } from 'lucide-react';
+import { Copy, Download, Play, CheckCircle, AlertTriangle, RefreshCw, FileText, Zap, ExternalLink, Upload, Clipboard } from 'lucide-react';
 
 interface MetaJSONEditorProps {
   flowJSON: MetaFlow;
@@ -157,17 +157,6 @@ export function MetaJSONEditor({ flowJSON, hasValidationErrors, onRunFlow, onUpd
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-sm font-semibold text-gray-900">JSON Editor v7.1</h3>
           <div className="flex space-x-1">
-            <button
-              onClick={() => setShowSettings(!showSettings)}
-              className={`p-1 rounded transition-colors ${
-                showSettings 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
-              }`}
-              title="Settings"
-            >
-              <Settings size={12} />
-            </button>
             <button
               onClick={pasteFromClipboard}
               className="p-1 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
