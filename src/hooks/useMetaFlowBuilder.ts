@@ -481,8 +481,7 @@ export function useMetaFlowBuilder() {
 
   const deleteScreen = useCallback((screenId: string) => {
     if (screens.length <= 1) {
-      alert('Cannot delete the last screen. Create a new screen first.');
-      return;
+      return; // Silently prevent deletion of last screen
     }
     
     saveToHistory();
@@ -534,7 +533,7 @@ export function useMetaFlowBuilder() {
       setTimeout(() => validateFlow(), 100);
     } catch (error) {
       console.error('Invalid JSON:', error);
-      alert('Invalid JSON format. Please check your syntax.');
+      // Visual feedback only - no alert
     }
   }, [currentScreen, saveToHistory, validateFlow]);
 
