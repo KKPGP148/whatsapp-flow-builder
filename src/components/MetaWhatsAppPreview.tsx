@@ -603,9 +603,9 @@ export function MetaWhatsAppPreview({
             </div>
 
             {/* WhatsApp Header - Refined to match Meta preview */}
-            <div className="bg-green-600 text-white px-4 py-3 flex items-center space-x-3 flex-shrink-0 shadow-sm">
+            <div className="bg-[#25D366] text-white px-4 py-3 flex items-center space-x-3 flex-shrink-0 shadow-sm">
               <X size={18} className="text-white" />
-              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-[#128c7e] rounded-full flex items-center justify-center">
                 {/* Solid green circle without nested elements */}
               </div>
               <div className="flex-1">
@@ -655,24 +655,24 @@ export function MetaWhatsAppPreview({
               </div>
             </div>
 
-            {/* Fixed Footer - Styled to match Meta preview */}
+            {/* Fixed Footer - Styled with green color palette */}
             {footerComponent && (
-              <div className="bg-white border-t border-gray-200 p-3 flex-shrink-0">
+              <div className="bg-[#075e54] border-t border-[#075e54] p-3 flex-shrink-0">
                 <div className="flex items-center justify-between">
                   {footerComponent.props?.['left-caption'] && (
-                    <button className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                    <button className="text-sm font-medium text-white hover:text-gray-200 transition-colors">
                       {footerComponent.props['left-caption']}
                     </button>
                   )}
                   
                   {footerComponent.props?.['center-caption'] && (
-                    <span className="text-xs text-gray-500 font-medium">
+                    <span className="text-xs text-white font-medium">
                       {footerComponent.props['center-caption']}
                     </span>
                   )}
                   
                   {footerComponent.props?.['right-caption'] && (
-                    <button className="w-full max-w-[200px] py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-full text-sm font-medium transition-colors">
+                    <button className="px-4 py-2 bg-[#25D366] hover:bg-[#128c7e] text-white rounded-full text-sm font-medium transition-colors">
                       {footerComponent.props['right-caption']}
                     </button>
                   )}
